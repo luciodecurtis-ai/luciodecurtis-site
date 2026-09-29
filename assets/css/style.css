@@ -659,3 +659,7 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 @media (max-width: 767px) { .app-block { grid-template-columns: 1fr; justify-items: center; gap: 2rem; } .app-phone { width: min(19rem, 86vw); } }
 /* hide the fixed "Edit with Base44" badge by letting the iframe run past the phone's bottom edge */
 .app-screen iframe { height: calc(100% + 84px); }
+/* render the web app at real iPhone width (390px) and scale it into the mockup */
+.app-phone { width: 19rem; }
+.app-screen { height: 38rem; aspect-ratio: auto; }
+.app-screen iframe { width: 390px; height: calc((38rem - 2.3rem) / 0.7303 + 115px); transform: scale(0.7303); transform-origin: 0 0; }
