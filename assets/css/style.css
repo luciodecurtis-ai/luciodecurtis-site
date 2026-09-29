@@ -474,3 +474,7 @@ body.is-career .about-txt-flex .label { color: var(--accent); font-size: .78rem;
 .tl-logo { height: 1.9rem; width: auto; display: inline-block; }
 body.is-career .info-section.is-motto { padding-top: 3.4rem; padding-bottom: 3.4rem; }
 @media (max-width: 767px) { body.is-career .info-section.is-motto { padding-top: 2.2rem; padding-bottom: 2.2rem; } .tl-logo { height: 1.6rem; } }
+/* smaller timeline logos */
+.tl-logo { height: 1.25rem; }
+.tl-logo.is-square { height: 2.4rem; }
+@media (max-width: 767px) { .tl-logo { height: 1.05rem; } .tl-logo.is-square { height: 2rem; } }
