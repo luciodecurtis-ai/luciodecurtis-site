@@ -501,3 +501,5 @@ body.is-career .tl-body .d { color: rgba(255,255,255,.78); font-weight: 500; fon
   body.is-career .tl-body .r { font-size: 1.2rem; }
 }
 @media (max-width: 767px) { body.is-career .tl-row { grid-template-columns: 7.6rem 1fr; } .tl-media { padding: .55rem; } }
+.tl-media.is-portrait img[src*="lucio-freelance"] { object-position: 36% 35%; }
+.tl-media.is-portrait img[src*="lucio-marketer-1"] { object-position: 50% 42%; }
