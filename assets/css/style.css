@@ -478,3 +478,26 @@ body.is-career .info-section.is-motto { padding-top: 3.4rem; padding-bottom: 3.4
 .tl-logo { height: 1.25rem; }
 .tl-logo.is-square { height: 2.4rem; }
 @media (max-width: 767px) { .tl-logo { height: 1.05rem; } .tl-logo.is-square { height: 2rem; } }
+
+/* ---------- v13: timeline cards with readable logos ---------- */
+body.is-career .tl-row { display: grid; grid-template-columns: 8rem 13rem 1fr; gap: 2rem; align-items: center; padding: 1.6rem 0; }
+.tl-media { height: 6.5rem; border-radius: .9rem; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center; padding: 1.1rem 1.3rem; overflow: hidden; }
+.tl-media img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; }
+.tl-media.is-square { padding: .5rem; }
+.tl-media.is-portrait { padding: 0; }
+.tl-media.is-portrait img { width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: 50% 30%; }
+.tl-media.is-text span { color: var(--accent); font-weight: 800; text-transform: uppercase; letter-spacing: -.02em; font-size: 1.15rem; }
+.tl-body { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+body.is-career .tl-body .r { font-size: 1.5rem; line-height: 1; letter-spacing: -.03em; font-weight: 800; display: block; }
+.tl-body .org { color: var(--accent); font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; font-weight: 700; }
+body.is-career .tl-body .d { color: rgba(255,255,255,.78); font-weight: 500; font-size: .92rem; line-height: 1.4; max-width: 44rem; margin-top: .25rem; }
+@media (max-width: 767px) {
+  body.is-career .tl-row { grid-template-columns: 6.2rem 1fr; grid-template-areas: "y y" "m b"; gap: .7rem 1rem; align-items: start; padding: 1.3rem 0; }
+  body.is-career .tl-row .y { grid-area: y; }
+  .tl-media { grid-area: m; height: 4.8rem; padding: .7rem; border-radius: .7rem; }
+  .tl-media.is-text span { font-size: .8rem; }
+  .tl-body { grid-area: b; }
+  body.is-career .tl-body .r { font-size: 1.2rem; }
+}
+@media (max-width: 767px) { body.is-career .tl-row { grid-template-columns: 7.6rem 1fr; } .tl-media { padding: .55rem; } }
