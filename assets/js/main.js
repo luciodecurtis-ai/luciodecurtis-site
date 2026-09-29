@@ -332,6 +332,34 @@ function initFilters() {
   renumber();
 }
 
+/* ---------- "Chi sono": words light up as you read ---------- */
+function initStory() {
+  const texts = document.querySelectorAll(".ch-text");
+  if (!texts.length || reduced) return;
+  const wrap = (node) => {
+    [...node.childNodes].forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          const sp = document.createElement("span"); sp.className = "w"; sp.textContent = part; frag.appendChild(sp);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) wrap(n);
+    });
+  };
+  texts.forEach((t) => {
+    wrap(t);
+    gsap.to(t.querySelectorAll(".w"), {
+      opacity: 1, ease: "none", stagger: 0.08,
+      scrollTrigger: { trigger: t, start: "top 82%", end: "bottom 52%", scrub: 0.6 }
+    });
+    const y = t.parentElement.querySelector(".ch-year");
+    if (y) gsap.from(y, { x: -24, opacity: 0, duration: 0.9, ease: "expo.out", scrollTrigger: { trigger: t, start: "top 85%" } });
+  });
+}
+
 /* ---------- career title: make the small line exactly as wide as "& FULL STACK" ---------- */
 function fitDualTitle() {
   const top = document.querySelector(".dt-script"), bold = document.querySelector(".dt-bold");
@@ -357,6 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initDrawers();
   initFilters();
   fitDualTitle();
+  initStory();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());

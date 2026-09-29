@@ -556,3 +556,38 @@ body.is-career .about-txt-flex { justify-content: flex-start; padding: 3rem var(
 body.is-career .about-txt-flex > * { max-width: 62rem; }
 body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0; }
 @media (max-width: 767px) { body.is-career .about-txt-flex { padding: 2.2rem var(--pad) 2.6rem; } }
+
+/* ---------- v16: "Chi sono" as a scrolling story ---------- */
+.career-hero-photo { position: relative; margin: 0; width: 100%; aspect-ratio: 3 / 2; overflow: hidden; background: #161616; }
+.career-hero-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.about-story { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 4rem; padding: 6rem var(--pad) 5rem; }
+.story-aside { position: sticky; top: 6.5rem; align-self: start; display: flex; flex-direction: column; gap: 1.6rem; }
+.story-aside .about-head { flex-direction: column; align-items: flex-start; gap: 1.4rem; }
+.story-aside .about-lead { font-size: clamp(2.6rem, 4.6vw, 4.8rem); }
+.story-aside .about-sub { color: rgba(255,255,255,.72); font-weight: 500; font-size: 1.05rem; max-width: 26rem; margin: 0; }
+.story-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem; }
+.story-tags li { border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: .38rem .8rem; font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.story-tags a { color: var(--accent); }
+.story-chapters { display: flex; flex-direction: column; gap: 5.5rem; padding-top: .4rem; }
+.chapter { display: grid; grid-template-columns: 5.5rem 1fr; gap: 1.4rem; align-items: baseline; }
+.ch-year { font-family: var(--f-title); font-weight: 900; font-size: 2.2rem; line-height: 1; color: var(--accent); position: relative; }
+.ch-text { margin: 0; font-size: clamp(1.3rem, 1.9vw, 1.95rem); line-height: 1.32; font-weight: 500; letter-spacing: -.01em; color: #fff; text-wrap: pretty; }
+.ch-text strong { font-weight: 800; }
+.ch-text a { color: var(--accent); font-weight: 700; }
+.ch-text .w { opacity: .16; transition: none; }
+@media (prefers-reduced-motion: reduce) { .ch-text .w { opacity: 1; } }
+@media (max-width: 900px) {
+  .about-story { grid-template-columns: 1fr; gap: 3rem; padding: 3rem var(--pad) 3.5rem; }
+  .story-aside { position: relative; top: 0; }
+  .story-aside .about-head { flex-direction: row; align-items: center; gap: 1rem; }
+  .story-aside .about-lead { font-size: clamp(1.9rem, 9vw, 2.8rem); }
+  .story-chapters { gap: 3.2rem; }
+  .chapter { grid-template-columns: 1fr; gap: .6rem; }
+  .ch-year { font-size: 1.7rem; }
+  .ch-text { font-size: 1.28rem; }
+}
+/* "Chi sono": slightly smaller type */
+.ch-text { font-size: clamp(1.15rem, 1.6vw, 1.62rem); line-height: 1.36; }
+.ch-year { font-size: 1.9rem; }
+.story-aside .about-lead { font-size: clamp(2.3rem, 4vw, 4.1rem); }
+@media (max-width: 900px) { .ch-text { font-size: 1.14rem; } .ch-year { font-size: 1.5rem; } .story-aside .about-lead { font-size: clamp(1.8rem, 8.4vw, 2.5rem); } }
