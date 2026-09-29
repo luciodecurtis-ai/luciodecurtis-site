@@ -506,3 +506,5 @@ body.is-career .tl-body .d { color: rgba(255,255,255,.78); font-weight: 500; fon
 .ig-tag { display: inline-flex; align-items: center; gap: .35rem; text-transform: none; letter-spacing: 0; font-size: .9rem; }
 .ig-tag .tl { width: .95rem; height: .95rem; }
 .ig-tag:hover { text-decoration: underline; }
+.tl-media.is-white { background: #fff; border-color: #fff; }
+.tl-media.is-purple { background: #7e4afa; border-color: #7e4afa; }
