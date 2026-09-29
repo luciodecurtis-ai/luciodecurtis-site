@@ -332,77 +332,45 @@ function initFilters() {
   renumber();
 }
 
-/* ---------- Percorso: 3D orbit ---------- */
-function initOrbit() {
-  const root = document.querySelector("[data-orbit]");
-  if (!root) return;
-  if (reduced) { root.closest(".orbit-section").classList.add("no-orbit"); return; }
-  const items = [...root.querySelectorAll(".orbit-item")];
-  const N = items.length;
-  const core = root.querySelector(".orbit-core-inner");
-  const detailM = root.parentElement.querySelector(".orbit-detail-m");
-  const ring = root.querySelector(".orbit-ring");
-  const [r1, r2] = ring.querySelectorAll("ellipse");
-  let W = 0, H = 0, Rx = 0, Ry = 0, rot = 0, speed = 0.07, hover = -1, active = -1;
-  let tiltX = 0, tiltY = 0, tx = 0, ty = 0, visible = false, last = performance.now();
-  const measure = () => {
-    W = root.clientWidth; H = root.clientHeight;
-    const mobile = W < 768;
-    Rx = mobile ? W * 0.37 : Math.min(W * 0.4, 560);
-    Ry = mobile ? Math.min(Rx * 0.95, H * 0.36) : Math.min(Math.max(Rx * 0.42, 250), H * 0.36);
+/* ---------- Percorso: horizontal scrolling timeline ---------- */
+function initTimeline() {
+  const sec = document.querySelector("[data-tline]");
+  if (!sec) return;
+  const track = sec.querySelector(".tline-track");
+  const items = [...track.querySelectorAll(".tline-item")];
+  const fill = sec.querySelector(".tline-fill");
+  const cur = sec.querySelector(".tline-cur");
+  if (reduced) { sec.classList.add("no-motion"); return; }
+  const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+  let mx = 0, mxS = 0, base = 0;
+  const setActive = (p) => {
+    // "reading point" travels from the middle of the screen to its right edge
+    const reach = dist() * p + window.innerWidth * (0.5 + 0.45 * p);
+    let n = 0;
+    items.forEach((el, k) => { if (el.offsetLeft <= reach) n = k; });
+    fill.style.transform = `scaleX(${Math.min(1, (items[n].offsetLeft + 4) / track.scrollWidth)})`;
+    items.forEach((el, k) => el.classList.toggle("is-on", k <= n));
+    cur.textContent = String(n + 1).padStart(2, "0");
   };
-  const show = (i) => {
-    if (i === active) return; active = i;
-    items.forEach((el, k) => el.classList.toggle("is-active", k === i));
-    const html = items[i].querySelector("template").innerHTML;
-    [core, detailM].forEach((box) => {
-      if (!box) return;
-      box.classList.add("is-out");
-      setTimeout(() => { box.innerHTML = html; box.classList.remove("is-out"); }, 180);
-    });
-  };
-  items.forEach((el, i) => {
-    el.addEventListener("mouseenter", () => { hover = i; show(i); });
-    el.addEventListener("mouseleave", () => { hover = -1; });
-    el.addEventListener("focus", () => { hover = i; show(i); });
-    el.addEventListener("blur", () => { hover = -1; });
-    el.addEventListener("click", () => { hover = hover === i ? -1 : i; show(i); });
+  ScrollTrigger.create({
+    trigger: sec, pin: sec.querySelector(".tline-pin"), start: "top top",
+    end: () => "+=" + dist(), scrub: true, invalidateOnRefresh: true,
+    onUpdate: (st) => { base = -dist() * st.progress; setActive(st.progress); },
   });
-  root.addEventListener("mousemove", (e) => {
-    const r = root.getBoundingClientRect();
-    tx = ((e.clientX - r.left) / r.width - 0.5) * 2; ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+  setActive(0);
+  // mouse: subtle drift of the track and parallax on the thumbnails
+  sec.addEventListener("mousemove", (e) => { mx = e.clientX / window.innerWidth - 0.5; });
+  sec.addEventListener("mouseleave", () => { mx = 0; });
+  items.forEach((el) => {
+    el.addEventListener("mouseenter", () => track.classList.add("has-hover"));
+    el.addEventListener("mouseleave", () => track.classList.remove("has-hover"));
   });
-  root.addEventListener("mouseleave", () => { tx = 0; ty = 0; });
-  new IntersectionObserver((en) => { visible = en[0].isIntersecting; }, { rootMargin: "200px" }).observe(root);
-  window.addEventListener("resize", measure);
-  measure();
-  const frame = (now) => {
-    const dt = Math.min(now - last, 50); last = now;
-    if (visible) {
-      if (hover < 0) rot += speed * dt * 0.06;
-      tiltX += (tx - tiltX) * 0.06; tiltY += (ty - tiltY) * 0.06;
-      const ry = Ry * (1 + tiltY * 0.35), skew = tiltX * 0.18;
-      const cx = W / 2, cy = H / 2;
-      [r1, r2].forEach((e, k) => { const f = k ? 1.12 : 1; e.setAttribute("cx", cx); e.setAttribute("cy", cy); e.setAttribute("rx", Rx * f); e.setAttribute("ry", ry * f); e.setAttribute("transform", `rotate(${skew * 20} ${cx} ${cy})`); });
-      let front = 0, best = -2;
-      items.forEach((el, i) => {
-        const a = (rot + (i * 360) / N) * Math.PI / 180;
-        const z = Math.cos(a);
-        let x = Math.sin(a) * Rx, y = z * ry;
-        const ang = skew * 20 * Math.PI / 180; const xr = x * Math.cos(ang) - y * Math.sin(ang), yr = x * Math.sin(ang) + y * Math.cos(ang);
-        const d = (z + 1) / 2; const sc = 0.62 + d * 0.48;
-        const isH = hover === i;
-        el.style.transform = `translate(-50%, -50%) translate(${xr.toFixed(1)}px, ${yr.toFixed(1)}px) scale(${(sc * (isH ? 1.08 : 1)).toFixed(3)})`;
-        el.style.zIndex = z > -0.05 ? 60 + Math.round(d * 40) : Math.round(d * 40);
-        el.style.opacity = (0.3 + d * 0.7).toFixed(2);
-        el.style.filter = `blur(${((1 - d) * 2.2).toFixed(2)}px) brightness(${(0.55 + d * 0.45).toFixed(2)})`;
-        if (z > best) { best = z; front = i; }
-      });
-      if (hover < 0) show(front);
-    }
-    requestAnimationFrame(frame);
-  };
-  requestAnimationFrame(frame);
+  const thumbs = items.map((el) => el.querySelector(".tline-thumb"));
+  gsap.ticker.add(() => {
+    mxS += (mx - mxS) * 0.08;
+    track.style.transform = `translate3d(${(base - mxS * 40).toFixed(1)}px,0,0)`;
+    thumbs.forEach((t, k) => { t.style.transform = `translateX(${(mxS * (10 + (k % 3) * 6)).toFixed(1)}px)`; });
+  });
 }
 
 /* ---------- Work: Photography / Full Stack Marketer tabs ---------- */
@@ -480,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
   fitDualTitle();
   initStory();
   initWorkTabs();
-  initOrbit();
+  initTimeline();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());
