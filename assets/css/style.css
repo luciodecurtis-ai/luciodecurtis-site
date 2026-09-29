@@ -657,3 +657,5 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .app-features li::before { content: ""; position: absolute; left: 0; top: .5em; width: .55rem; height: .55rem; border-radius: 50%; background: var(--accent); }
 .app-hint { color: rgba(255,255,255,.5); font-size: .8rem; }
 @media (max-width: 767px) { .app-block { grid-template-columns: 1fr; justify-items: center; gap: 2rem; } .app-phone { width: min(19rem, 86vw); } }
+/* hide the fixed "Edit with Base44" badge by letting the iframe run past the phone's bottom edge */
+.app-screen iframe { height: calc(100% + 84px); }
