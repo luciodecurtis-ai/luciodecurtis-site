@@ -734,3 +734,16 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 @media (prefers-reduced-motion: reduce) { .brand-track { animation: none; } .brand-row { flex-wrap: wrap; width: auto; } .brand-track[aria-hidden] { display: none; } }
 .brand { height: 9.5rem; padding: 0 3.6rem; }
 @media (max-width: 767px) { .brand { height: 6.4rem; padding: 0 2rem; } .brand img { transform: scale(.68); } .brand-marquee .brand:hover img { transform: scale(.8); } }
+/* mobile: at least 3 logos visible per row */
+@media (max-width: 767px) {
+  .brand { height: 4.6rem; padding: 0 1.05rem; }
+  .brand img { transform: scale(.42); margin: 0 -1.6rem; }
+  .brand-marquee .brand:hover img { transform: scale(.5); }
+  .brand-marquee { gap: .4rem; }
+}
+.brand img { width: calc(var(--w) * 1rem); height: calc(var(--h) * 1rem); }
+@media (max-width: 767px) {
+  .brand { height: 4.4rem; padding: 0 1.1rem; }
+  .brand img { width: calc(var(--w) * .46rem); height: calc(var(--h) * .46rem); transform: none; margin: 0; }
+  .brand-marquee .brand:hover img { transform: scale(1.1); }
+}
