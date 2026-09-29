@@ -332,45 +332,38 @@ function initFilters() {
   renumber();
 }
 
-/* ---------- Percorso: horizontal scrolling timeline ---------- */
+/* ---------- Percorso: vertical timeline, hover cards + mobile popup ---------- */
 function initTimeline() {
-  const sec = document.querySelector("[data-tline]");
-  if (!sec) return;
-  const track = sec.querySelector(".tline-track");
-  const items = [...track.querySelectorAll(".tline-item")];
-  const fill = sec.querySelector(".tline-fill");
-  const cur = sec.querySelector(".tline-cur");
-  if (reduced) { sec.classList.add("no-motion"); return; }
-  const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
-  let mx = 0, mxS = 0, base = 0;
-  const setActive = (p) => {
-    // "reading point" travels from the middle of the screen to its right edge
-    const reach = dist() * p + window.innerWidth * (0.5 + 0.45 * p);
-    let n = 0;
-    items.forEach((el, k) => { if (el.offsetLeft <= reach) n = k; });
-    fill.style.transform = `scaleX(${Math.min(1, (items[n].offsetLeft + 4) / track.scrollWidth)})`;
-    items.forEach((el, k) => el.classList.toggle("is-on", k <= n));
-    cur.textContent = String(n + 1).padStart(2, "0");
+  const vt = document.querySelector("[data-vt]");
+  if (!vt) return;
+  const items = [...vt.querySelectorAll(".vt-item")];
+  const fill = vt.querySelector(".vt-fill");
+  const modal = document.querySelector(".vt-modal");
+  document.body.appendChild(modal);
+  const inner = modal.querySelector(".vt-modal-inner");
+  const light = (p) => {
+    const y = p * vt.offsetHeight;
+    items.forEach((el) => el.classList.toggle("is-on", el.offsetTop + el.offsetHeight / 2 <= y + 1));
   };
-  ScrollTrigger.create({
-    trigger: sec, pin: sec.querySelector(".tline-pin"), start: "top top",
-    end: () => "+=" + Math.max(dist(), window.innerHeight * 0.9), scrub: true, invalidateOnRefresh: true,
-    onUpdate: (st) => { base = -dist() * st.progress; setActive(st.progress); },
+  if (reduced) { fill.style.transform = "scaleY(1)"; light(1); }
+  else ScrollTrigger.create({
+    trigger: vt, start: "top 65%", end: "bottom 65%", scrub: true,
+    onUpdate: (st) => { fill.style.transform = `scaleY(${st.progress})`; light(st.progress); },
   });
-  setActive(0);
-  // mouse: subtle drift of the track and parallax on the thumbnails
-  sec.addEventListener("mousemove", (e) => { mx = e.clientX / window.innerWidth - 0.5; });
-  sec.addEventListener("mouseleave", () => { mx = 0; });
-  items.forEach((el) => {
-    el.addEventListener("mouseenter", () => track.classList.add("has-hover"));
-    el.addEventListener("mouseleave", () => track.classList.remove("has-hover"));
-  });
-  const thumbs = items.map((el) => el.querySelector(".tline-thumb"));
-  gsap.ticker.add(() => {
-    mxS += (mx - mxS) * 0.08;
-    track.style.transform = `translate3d(${(base - mxS * 40).toFixed(1)}px,0,0)`;
-    thumbs.forEach((t, k) => { t.style.transform = `translateX(${(mxS * (10 + (k % 3) * 6)).toFixed(1)}px)`; });
-  });
+  const open = (item) => {
+    inner.innerHTML = item.querySelector(".vt-pop").innerHTML;
+    modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false");
+    if (typeof lenis !== "undefined" && lenis) lenis.stop();
+  };
+  const close = () => {
+    modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true");
+    if (typeof lenis !== "undefined" && lenis) lenis.start();
+  };
+  const hoverCards = () => window.matchMedia("(hover: hover) and (min-width: 768px)").matches;
+  items.forEach((item) => item.querySelector(".vt-box").addEventListener("click", () => { if (!hoverCards()) open(item); }));
+  modal.querySelector(".vt-modal-bg").addEventListener("click", close);
+  modal.querySelector(".vt-close").addEventListener("click", close);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
 }
 
 /* ---------- Work: Photography / Full Stack Marketer tabs ---------- */
