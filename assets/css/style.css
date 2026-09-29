@@ -663,3 +663,41 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .app-phone { width: 19rem; }
 .app-screen { height: 38rem; aspect-ratio: auto; }
 .app-screen iframe { width: 390px; height: calc((38rem - 2.3rem) / 0.7303 + 115px); transform: scale(0.7303); transform-origin: 0 0; }
+
+/* ---------- v20: "Come lavoro" editorial layout ---------- */
+.how { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 2.4rem 4rem; padding: 6rem var(--pad) 5rem; align-items: end; }
+.how-head { display: flex; flex-direction: column; gap: 1.4rem; }
+.how-head .label { color: var(--accent); font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.how-title { margin: 0; font-family: var(--f-title); font-weight: 900; text-transform: uppercase; font-size: clamp(3rem, 7.4vw, 8.2rem); line-height: .86; letter-spacing: -.005em; }
+.how-title .hl { color: var(--accent); }
+.how-sub { margin: .4rem 0 0; padding-left: 1.1rem; border-left: 3px solid var(--accent); font-size: clamp(1.1rem, 1.6vw, 1.45rem); line-height: 1.3; font-weight: 600; max-width: 30rem; color: #fff; }
+.how-body { display: flex; flex-direction: column; gap: 1.2rem; padding-bottom: .4rem; }
+.how-body p { margin: 0; font-size: 1.02rem; line-height: 1.6; color: rgba(255,255,255,.76); max-width: 34rem; }
+.how-body strong { color: #fff; font-weight: 700; }
+.how-match { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,.16); padding-top: 2.4rem; margin-top: 1.4rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.how-phases { margin: 0; display: flex; align-items: center; flex-wrap: wrap; gap: .4rem 1.1rem; font-family: var(--f-title); font-weight: 900; text-transform: uppercase; font-size: clamp(2.4rem, 6vw, 6rem); line-height: .9; }
+.how-phases i { width: clamp(1.4rem, 3.4vw, 3.4rem); height: .14em; background: var(--accent); border-radius: 99px; display: inline-block; }
+.how-phases em { font-style: normal; color: rgba(255,255,255,.35); }
+.how-intro { margin: .4rem 0 0; color: rgba(255,255,255,.72); font-size: 1rem; }
+.how-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.how-chips li { padding: .6rem 1.05rem; border-radius: 999px; background: rgba(200,255,58,.1); border: 1px solid rgba(200,255,58,.45); color: var(--accent); font-weight: 700; font-size: .86rem; text-transform: uppercase; letter-spacing: .03em;
+  transition: background .4s, color .4s, transform .5s cubic-bezier(.22,1,.36,1); }
+.how-chips li:hover { background: var(--accent); color: #0b0b0b; transform: translateY(-2px); }
+@media (max-width: 900px) {
+  .how { grid-template-columns: 1fr; gap: 1.8rem; padding: 3.4rem var(--pad) 3rem; }
+  .how-title { font-size: clamp(2.6rem, 13vw, 4.4rem); }
+  .how-phases { font-size: clamp(2rem, 11vw, 3.4rem); }
+  .how-match { padding-top: 1.8rem; margin-top: .4rem; }
+}
+@media (max-width: 900px) { .how-title { font-size: 11.4vw; } }
+.how-title .nw { white-space: nowrap; }
+.how-title { font-size: clamp(2.8rem, 6.1vw, 7rem); }
+@media (max-width: 900px) { .how-title { font-size: 11.2vw; } }
+@media (min-width: 901px) {
+  .how { grid-template-columns: 1fr; gap: 2.2rem; }
+  .how-title { white-space: nowrap; font-size: 5.7vw; }
+  .how-title br { display: none; }
+  .how-title .nw::after { content: " "; }
+  .how-body { display: grid; grid-template-columns: 1fr 1fr; gap: 2.4rem; }
+  .how-body p { max-width: none; }
+}
