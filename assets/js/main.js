@@ -376,7 +376,7 @@ function initWorkTabs() {
     panels.forEach((p) => { p.hidden = p.dataset.panel !== tab; });
     const on = document.querySelector(`[data-panel="${tab}"]`);
     if (animate && on) {
-      const kids = on.matches(".work-grid") ? on.children : on.querySelectorAll(".uc-card");
+      const kids = on.querySelectorAll(".work-grid > *, .uc > .uc-card, .work-tape");
       gsap.fromTo(kids, { y: "2rem", opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", stagger: 0.06 });
     }
     ScrollTrigger.refresh();
