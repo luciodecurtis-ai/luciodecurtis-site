@@ -332,6 +332,26 @@ function initFilters() {
   renumber();
 }
 
+/* ---------- Work: Photography / Full Stack Marketer tabs ---------- */
+function initWorkTabs() {
+  const btns = document.querySelectorAll(".tab-btn");
+  if (!btns.length) return;
+  const panels = document.querySelectorAll("[data-panel]");
+  const show = (tab, animate) => {
+    btns.forEach((b) => b.classList.toggle("is-active", b.dataset.tab === tab));
+    panels.forEach((p) => { p.hidden = p.dataset.panel !== tab; });
+    const on = document.querySelector(`[data-panel="${tab}"]`);
+    if (animate && on) {
+      const kids = on.matches(".work-grid") ? on.children : on.querySelectorAll(".uc-card");
+      gsap.fromTo(kids, { y: "2rem", opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", stagger: 0.06 });
+    }
+    ScrollTrigger.refresh();
+  };
+  btns.forEach((b) => b.addEventListener("click", () => { show(b.dataset.tab, true); try { history.replaceState(null, "", "#" + b.dataset.tab); } catch (e) {} }));
+  const h = (location.hash || "").replace("#", "");
+  if (h === "marketer" || h === "photography") show(h, false);
+}
+
 /* ---------- "Chi sono": words light up as you read ---------- */
 function initStory() {
   const texts = document.querySelectorAll(".ch-text");
@@ -386,6 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFilters();
   fitDualTitle();
   initStory();
+  initWorkTabs();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());

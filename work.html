@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:ital,wght@0,400..800;1,400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=275ab0ca">
+<link rel="stylesheet" href="assets/css/style.css?v=0338a837">
 </head>
 <body class="" style="--accent:#c8ff3a">
 <div class="pt" aria-hidden="true"><div class="pt-bk is-left"></div><div class="pt-bk is-right"></div></div>
@@ -26,13 +26,11 @@
 </nav>
 <main class="page_main">
   <header class="big-head u-container"><h1 class="big-title" data-split>Work</h1></header>
-  <div class="filter-flex u-container tr-intro">
-    <button class="filter-btn is-active" data-filter="all">Tutti</button>
-    <button class="filter-btn" data-filter="calcio">Calcio</button>
-    <button class="filter-btn" data-filter="padel">Padel</button>
-    <button class="filter-btn" data-filter="live">Live</button>
+  <div class="filter-flex u-container tr-intro" role="tablist">
+    <button class="tab-btn is-active" data-tab="photography" role="tab">Photography</button>
+    <button class="tab-btn" data-tab="marketer" role="tab">Full Stack Marketer</button>
   </div>
-  <div class="work-grid u-container">
+  <div class="work-grid u-container" data-panel="photography">
     <a class="work-item" data-cat="calcio" href="project-turris-gravina.html" style="--accent:#c8ff3a">
       <div class="work-visual"><img src="assets/img/gravina/DSC03606.jpg" srcset="assets/img/gravina/sm/DSC03606.jpg 1200w, assets/img/gravina/DSC03606.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="Turris vs Gravina" loading="lazy"><img class="is-hover" src="assets/img/gravina/DSC03693.jpg" srcset="assets/img/gravina/sm/DSC03693.jpg 1200w, assets/img/gravina/DSC03693.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
       <div class="work-meta"><span work-count>01</span><span class="t">Turris vs Gravina</span><span class="c">Serie D · 3ª giornata</span></div>
@@ -40,13 +38,25 @@
       <div class="work-visual"><img src="assets/img/npt/DSC05526.jpg" srcset="assets/img/npt/sm/DSC05526.jpg 1200w, assets/img/npt/DSC05526.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="NPT Master" loading="lazy"><img class="is-hover" src="assets/img/npt/DSC05735.jpg" srcset="assets/img/npt/sm/DSC05735.jpg 1200w, assets/img/npt/DSC05735.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
       <div class="work-meta"><span work-count>01</span><span class="t">NPT Master</span><span class="c">Napoli Padel Tour</span></div>
     </a><a class="work-item" data-cat="calcio" href="project-turris-fidelis-andria.html" style="--accent:#ffd23f">
-      <div class="work-visual"><img src="assets/img/fidelis/DSC04765.jpg" srcset="assets/img/fidelis/sm/DSC04765.jpg 1200w, assets/img/fidelis/DSC04765.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="Turris vs Fidelis Andria" loading="lazy"><img class="is-hover" src="assets/img/fidelis/DSC04774.jpg" srcset="assets/img/fidelis/sm/DSC04774.jpg 1200w, assets/img/fidelis/DSC04774.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
+      <div class="work-visual"><img src="assets/img/fidelis/DSC04906.jpg" srcset="assets/img/fidelis/sm/DSC04906.jpg 1200w, assets/img/fidelis/DSC04906.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="Turris vs Fidelis Andria" loading="lazy"><img class="is-hover" src="assets/img/fidelis/DSC04774.jpg" srcset="assets/img/fidelis/sm/DSC04774.jpg 1200w, assets/img/fidelis/DSC04774.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
       <div class="work-meta"><span work-count>01</span><span class="t">Turris vs Fidelis Andria</span><span class="c">Serie D · 5ª giornata</span></div>
     </a><a class="work-item" data-cat="live" href="project-bruno-mars-milano.html" style="--accent:#ff5fd2">
-      <div class="work-visual"><img src="assets/img/brunomars/IMG_6315.jpg" srcset="assets/img/brunomars/sm/IMG_6315.jpg 1200w, assets/img/brunomars/IMG_6315.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="Bruno Mars Milano" loading="lazy"><img class="is-hover" src="assets/img/brunomars/IMG_6192.jpg" srcset="assets/img/brunomars/sm/IMG_6192.jpg 1200w, assets/img/brunomars/IMG_6192.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
+      <div class="work-visual"><img src="assets/img/brunomars/IMG_6192.jpg" srcset="assets/img/brunomars/sm/IMG_6192.jpg 1200w, assets/img/brunomars/IMG_6192.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="Bruno Mars Milano" loading="lazy"><img class="is-hover" src="assets/img/brunomars/IMG_6315.jpg" srcset="assets/img/brunomars/sm/IMG_6315.jpg 1200w, assets/img/brunomars/IMG_6315.jpg 2400w" sizes="(max-width: 767px) 100vw, 60vw" alt="" loading="lazy"></div>
       <div class="work-meta"><span work-count>01</span><span class="t">Bruno Mars Milano</span><span class="c">Live concert</span></div>
     </a>
   </div>
+  <section class="uc u-container" data-panel="marketer" hidden>
+    <div class="uc-card">
+      <div class="uc-tape"><div class="uc-tape-track"><span>In costruzione · Work in progress · In costruzione · Work in progress · In costruzione · Work in progress · </span><span>In costruzione · Work in progress · In costruzione · Work in progress · In costruzione · Work in progress · </span></div></div>
+      <div class="uc-body">
+        <span class="uc-label"><i class="uc-dot"></i>Sezione in costruzione</span>
+        <h2 class="uc-title">Full Stack<br>Marketer</h2>
+        <p class="uc-text">Qui arriveranno i case study di strategia social, siti web, e-mail automation, grafica e video. Nel frattempo puoi conoscere il mio percorso o scrivermi per un progetto.</p>
+        <div class="uc-ctas"><a class="uc-btn is-solid" href="career.html">Scopri il percorso <svg class="ico-arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M4.2 3H9v4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg></a><a class="uc-btn" href="contact.html">Collaboriamo? <svg class="ico-arrow" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 9L9 3M4.2 3H9v4.8" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="square"/></svg></a></div>
+      </div>
+      <div class="uc-grid" aria-hidden="true"></div>
+    </div>
+  </section>
 </main>
 <footer class="footer"><div class="footer-inner" style="display:flex;flex-direction:column;gap:2.4rem">
   <div class="footer-top">
@@ -67,6 +77,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
 <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
-<script src="assets/js/main.js?v=275ab0ca"></script>
+<script src="assets/js/main.js?v=0338a837"></script>
 </body>
 </html>
