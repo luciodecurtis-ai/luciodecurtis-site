@@ -161,6 +161,7 @@ function initHomeScroll() {
       const n = (e % (S.length - 1)) + 1;
       c.textContent = String(n).padStart(2, "0") + " / " + String(S.length - 1).padStart(2, "0");
     });
+    document.dispatchEvent(new CustomEvent("home:active", { detail: e }));
   }
   setActive(0);
 
@@ -332,6 +333,23 @@ function initFilters() {
   renumber();
 }
 
+/* ---------- Home: after the first 3 slides, a small arrow invites to Career ---------- */
+function initCareerHint() {
+  const link = document.querySelector('.nav-row.is-top a[href="career.html"]');
+  if (!link || !document.querySelector(".home-projects-list")) return;
+  let shown = false;
+  document.addEventListener("home:active", (ev) => {
+    if (shown || ev.detail < 3) return;
+    shown = true;
+    const hint = document.createElement("span");
+    hint.className = "career-hint";
+    hint.innerHTML = '<svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 15V2M1.5 6.5 6 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    link.appendChild(hint);
+    link.classList.add("has-hint");
+    requestAnimationFrame(() => requestAnimationFrame(() => hint.classList.add("is-in")));
+  });
+}
+
 /* ---------- Percorso: vertical timeline, hover cards + mobile popup ---------- */
 function initTimeline() {
   const vt = document.querySelector("[data-vt]");
@@ -442,6 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initStory();
   initWorkTabs();
   initTimeline();
+  initCareerHint();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());
