@@ -867,3 +867,6 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 }
 @media (min-width: 768px) { .vt-section { padding-bottom: 10rem; } }
 @media (min-width: 768px) and (max-width: 1339px) { .vt-section { padding-bottom: 13rem; } }
+/* v26: glows flow across sections — clip at page level, not per section */
+.page_main { overflow: clip; isolation: isolate; }
+.glow { isolation: auto; overflow: visible; }
