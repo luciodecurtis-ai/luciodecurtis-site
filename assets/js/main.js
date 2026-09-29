@@ -354,7 +354,7 @@ function initTimeline() {
   };
   ScrollTrigger.create({
     trigger: sec, pin: sec.querySelector(".tline-pin"), start: "top top",
-    end: () => "+=" + dist(), scrub: true, invalidateOnRefresh: true,
+    end: () => "+=" + Math.max(dist(), window.innerHeight * 0.9), scrub: true, invalidateOnRefresh: true,
     onUpdate: (st) => { base = -dist() * st.progress; setActive(st.progress); },
   });
   setActive(0);

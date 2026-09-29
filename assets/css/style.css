@@ -805,3 +805,9 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 }
 .no-motion .tline-track { flex-direction: column; width: auto; gap: 3rem; }
 .no-motion .tline-line { display: none; }
+/* v24b: desktop shows (almost) the whole timeline */
+@media (min-width: 768px) {
+  .tline-item { width: max(14.5rem, calc((100vw - 2 * var(--pad)) / 5.6)); padding-right: 2rem; }
+  .tline-text { font-size: .8rem; }
+  .tline-role { font-size: .95rem; }
+}
