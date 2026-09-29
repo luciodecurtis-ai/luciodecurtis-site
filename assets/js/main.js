@@ -350,6 +350,79 @@ function initCareerHint() {
   });
 }
 
+/* ---------- Career: brand logos cascade in + count up ---------- */
+function initBrandsReveal() {
+  const sec = document.querySelector(".brands");
+  if (!sec || reduced) return;
+  const sup = sec.querySelector(".brands-title sup");
+  const logos = sec.querySelectorAll(".brand");
+  gsap.set(logos, { opacity: 0, y: 24 });
+  ScrollTrigger.create({
+    trigger: sec, start: "top 70%", once: true,
+    onEnter: () => {
+      gsap.to(logos, { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.035 });
+      if (sup) {
+        const n = parseInt(sup.textContent, 10) || 0, o = { v: 0 };
+        sup.classList.add("is-counting");
+        gsap.to(o, { v: n, duration: 1.6, ease: "power2.out", onUpdate: () => (sup.textContent = Math.round(o.v)), onComplete: () => sup.classList.remove("is-counting") });
+      }
+    },
+  });
+}
+
+/* ---------- elements that fade in when they enter the screen ---------- */
+function initRevealHints() {
+  document.querySelectorAll("[data-reveal-hint]").forEach((el) => {
+    new IntersectionObserver((en, io) => { if (en[0].isIntersecting) { el.classList.add("is-in"); io.disconnect(); } }, { threshold: 0.4 }).observe(el);
+  });
+}
+
+/* ---------- Project pages: "scroll the gallery" arrow + progress bar/counter ---------- */
+function initGalleryGuide() {
+  const vis = document.querySelector(".project-visuals");
+  if (!vis) return;
+  const shots = [...vis.querySelectorAll(".pv")];
+  if (!shots.length) return;
+  const bar = document.createElement("div"); bar.className = "gal-bar"; bar.innerHTML = "<span></span>";
+  const count = document.createElement("div"); count.className = "gal-count";
+  const hint = document.createElement("div"); hint.className = "gal-hint";
+  hint.innerHTML = '<span>Scorri la galleria</span><svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 1v13M1.5 9.5 6 14l4.5-4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  document.body.append(bar, count, hint);
+  const fill = bar.firstChild;
+  const first = shots[0];
+  // arrow: appears after a few seconds if the visitor hasn't reached the photos yet
+  setTimeout(() => { if (first.getBoundingClientRect().top > window.innerHeight * 0.55) hint.classList.add("is-in"); }, 2500);
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const vh = window.innerHeight, r = vis.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (vh * 0.6 - r.top) / r.height));
+    fill.style.transform = `scaleX(${p})`;
+    let n = 0;
+    for (const el of shots) { if (el.getBoundingClientRect().top < vh * 0.6) n++; else break; }
+    const inGallery = r.top < vh * 0.6 && r.bottom > vh * 0.4;
+    bar.classList.toggle("is-in", inGallery);
+    count.classList.toggle("is-in", inGallery && n > 0);
+    count.textContent = String(Math.max(1, n)).padStart(2, "0") + " / " + String(shots.length).padStart(2, "0");
+    if (first.getBoundingClientRect().top < vh * 0.55) hint.classList.remove("is-in");
+  };
+  window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+  update();
+}
+
+/* ---------- yellow tape: speeds up while scrolling ---------- */
+function initTapeSpeed() {
+  const tracks = [...document.querySelectorAll(".uc-tape-track")];
+  if (!tracks.length || reduced) return;
+  let lastY = window.scrollY, rate = 1;
+  gsap.ticker.add(() => {
+    const y = window.scrollY, v = Math.abs(y - lastY); lastY = y;
+    const target = 1 + Math.min(v / 6, 5);
+    rate += (target - rate) * 0.08;
+    tracks.forEach((t) => t.getAnimations().forEach((a) => (a.playbackRate = rate)));
+  });
+}
+
 /* ---------- Percorso: vertical timeline, hover cards + mobile popup ---------- */
 function initTimeline() {
   const vt = document.querySelector("[data-vt]");
@@ -461,6 +534,10 @@ document.addEventListener("DOMContentLoaded", () => {
   initWorkTabs();
   initTimeline();
   initCareerHint();
+  initBrandsReveal();
+  initRevealHints();
+  initGalleryGuide();
+  initTapeSpeed();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());
