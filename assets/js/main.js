@@ -255,7 +255,7 @@ function initScrollAnimations() {
   });
   document.querySelectorAll(".about-split-grid").forEach((el) => {
     mm.add("(min-width: 992px)", () => {
-      gsap.fromTo(el.querySelector(".about-txt-flex"), { y: el.getAttribute("split-section") === "02" ? "15rem" : "-20rem" }, {
+      gsap.fromTo(el.querySelector(".about-txt-flex"), { y: el.getAttribute("split-section") === "02" ? "15rem" : "-3rem" }, {
         y: "0rem", ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true }
       });
       const img = el.querySelector(".about-visual img");

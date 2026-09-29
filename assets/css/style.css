@@ -508,3 +508,39 @@ body.is-career .tl-body .d { color: rgba(255,255,255,.78); font-weight: 500; fon
 .ig-tag:hover { text-decoration: underline; }
 .tl-media.is-white { background: #fff; border-color: #fff; }
 .tl-media.is-purple { background: #7e4afa; border-color: #7e4afa; }
+
+/* ---------- v14: typography "Stadio" — Big Shoulders Display + Hanken Grotesk ---------- */
+:root { --f-title: "Big Shoulders Display", "Arial Narrow", "Helvetica Neue", sans-serif; --f-body: "Hanken Grotesk", "Helvetica Neue", Arial, sans-serif; }
+body { font-family: var(--f-body); }
+.home-title, .big-title, .dual-title .dt-bold, body.is-career .dt-script, .centere-big-txt, .footer-word, .sub-head h2,
+.loader-row, .about-lead, h2.about-lead, .skill .s, body.is-career .tl-body .r, .work-meta .t, .tl-media.is-text span,
+.contact-lines, .crest-txt {
+  font-family: var(--f-title); font-stretch: normal; letter-spacing: -.005em;
+}
+.home-title, .big-title, .dual-title .dt-bold, body.is-career .dt-script, .centere-big-txt, .footer-word, .loader-row { font-weight: 900; }
+.home-title { font-size: clamp(3.6rem, 12.6vw, 14.5rem); line-height: .86; }
+.home-content-block.is-intro .home-title { font-size: clamp(3.6rem, 13.4vw, 15rem); }
+.big-title { font-size: clamp(3.6rem, 13vw, 15rem); line-height: .86; }
+.contact-hero .big-title { font-size: min(14vw, 14rem); }
+.centere-big-txt { font-size: clamp(3.6rem, 12vw, 13rem); line-height: .86; }
+.footer-word { font-size: clamp(3rem, 12vw, 15rem); line-height: .82; }
+body.is-career .dt-bold { font-size: min(11.6vw, 13rem); line-height: .86; }
+h2.about-lead, .about-lead { font-weight: 800; letter-spacing: 0; line-height: .95; }
+h2.about-lead { font-size: clamp(2.4rem, 5vw, 5rem); }
+.skill .s { font-weight: 800; font-size: 1.7rem; letter-spacing: 0; }
+body.is-career .tl-body .r { font-weight: 800; font-size: 1.9rem; letter-spacing: 0; }
+.work-meta .t { font-weight: 800; font-size: .95rem; letter-spacing: .01em; }
+.contact-lines { font-weight: 800; letter-spacing: 0; }
+.sub-head h2 { font-weight: 900; font-size: clamp(2rem, 5vw, 4.2rem); }
+.loader-row.is-done { font-family: var(--f-body); }
+@media (max-width: 767px) {
+  .home-title { font-size: clamp(3rem, 17vw, 6.4rem); }
+  body.is-career .dt-bold { font-size: 15vw; }
+  .about-head .about-lead { font-size: clamp(1.9rem, 9vw, 2.7rem); }
+  body.is-career .tl-body .r { font-size: 1.5rem; }
+  .skill .s { font-size: 1.45rem; }
+}
+@media (min-width: 768px) {
+  body.is-career .dt-bold { font-size: min(9.2vw, 10.5rem); }
+  body.is-career .info-hero { padding-bottom: 2.4rem; }
+}
