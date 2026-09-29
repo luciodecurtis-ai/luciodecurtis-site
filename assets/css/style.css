@@ -544,3 +544,5 @@ body.is-career .tl-body .r { font-weight: 800; font-size: 1.9rem; letter-spacing
   body.is-career .dt-bold { font-size: min(9.2vw, 10.5rem); }
   body.is-career .info-hero { padding-bottom: 2.4rem; }
 }
+.ig-inline { color: var(--accent); font-weight: 700; }
+.ig-inline:hover { text-decoration: underline; }
