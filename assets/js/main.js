@@ -234,15 +234,14 @@ function initHomeScroll() {
     ScrollTrigger.create({ start: 40, onEnter: () => hint.classList.add("is-gone"), onLeaveBack: () => hint.classList.remove("is-gone") });
   }
 
-  // standing still on a slide for 2s makes its link glow
-  let idleT, activeIdx = 0;
+  // the link of the slide in view glows as soon as the slide arrives (after the first scroll)
+  let idleT;
   const idleOff = () => document.querySelectorAll(".home-link.is-idle").forEach((l) => l.classList.remove("is-idle"));
-  const armIdle = () => {
+  document.addEventListener("home:active", (ev) => {
     clearTimeout(idleT); idleOff();
-    idleT = setTimeout(() => items[activeIdx] && items[activeIdx].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 1000);
-  };
-  document.addEventListener("home:active", (ev) => { activeIdx = ev.detail; if (window.scrollY > 40) armIdle(); });
-  window.addEventListener("scroll", armIdle, { passive: true });
+    if (window.scrollY <= 40) return;
+    idleT = setTimeout(() => items[ev.detail] && items[ev.detail].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 250);
+  });
 }
 
 /* ---------- inner page reveals ---------- */
