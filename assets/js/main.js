@@ -43,6 +43,35 @@ function initTransitions() {
       .to(L, { yPercent: -100, duration: 1, ease: "expo.inOut" }, 0)
       .to(R, { yPercent: 100, duration: 1, ease: "expo.inOut" }, 0);
   }
+  // arriving from a project card: the photo that filled the screen lifts away in 3D
+  const D = document.documentElement;
+  if (D.classList.contains("ptc-in")) {
+    const ov = document.createElement("div"); ov.className = "ptc-overlay";
+    ov.style.backgroundImage = `url(${JSON.stringify(D.dataset.ptc)})`;
+    document.body.appendChild(ov); D.classList.remove("ptc-in");
+    gsap.timeline({ delay: 0.15, onComplete: () => ov.remove() })
+      .to(ov, { yPercent: -100, rotationX: 14, transformPerspective: 1200, transformOrigin: "50% 100%", duration: 1.15, ease: "expo.inOut" }, 0)
+      .to(ov, { filter: "brightness(.55)", duration: 0.8, ease: "power2.in" }, 0);
+  }
+  // leaving through a project card: the card's photo grows into a full-screen cover
+  const cardExpand = (a, href) => {
+    const wrap = a.matches(".wc") ? a : a.closest(".home-projects-item")?.querySelector(".home-project-visual-wrap");
+    const img = wrap && wrap.querySelector("img");
+    if (!img || !img.currentSrc) return false;
+    const r = wrap.getBoundingClientRect();
+    const box = document.createElement("div"); box.className = "ptc-overlay is-out";
+    box.style.backgroundImage = `url(${JSON.stringify(img.currentSrc)})`;
+    Object.assign(box.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", borderRadius: getComputedStyle(wrap).borderRadius });
+    document.body.appendChild(box);
+    try { sessionStorage.setItem("ptc", img.currentSrc); } catch (e) {}
+    lenis && lenis.stop();
+    gsap.timeline({ onComplete: () => (location.href = href) })
+      .to(box, { rotationX: 10, transformPerspective: 1200, duration: 0.35, ease: "power2.out" }, 0)
+      .to(box, { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight, borderRadius: 0, duration: 0.85, ease: "expo.inOut" }, 0.05)
+      .to(box, { rotationX: 0, duration: 0.6, ease: "power3.inOut" }, 0.35)
+      .to(".page_main, .page_scroll", { opacity: 0.3, duration: 0.6 }, 0);
+    return true;
+  };
   document.querySelectorAll("a[href]").forEach((a) => {
     const href = a.getAttribute("href");
     if (!href || href.startsWith("#") || href.startsWith("mailto:") || href.startsWith("tel:") ||
@@ -50,6 +79,7 @@ function initTransitions() {
     a.addEventListener("click", (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
+      if (!reduced && href.startsWith("project-") && (a.matches(".wc") || a.matches(".home-link")) && cardExpand(a, href)) return;
       store.set("pt", "1");
       lenis && lenis.stop();
       gsap.timeline({ onComplete: () => (location.href = href) })
@@ -353,6 +383,47 @@ function initCardTilt() {
     });
     card.addEventListener("mouseleave", () => { set.rx(0); set.ry(0); if (tx) { tx.x(0); tx.y(0); } if (cx) { cx.x(0); cx.y(0); } });
   });
+}
+
+/* ---------- CAREER: 3D title — letters turn toward the cursor, fluo extrusion shifts with the light ---------- */
+function initTitle3D() {
+  const h = document.querySelector("body.is-career .dual-title");
+  if (!h || reduced) return;
+  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const chars = [];
+  const split = (el) => {
+    [...el.childNodes].forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        [...n.textContent].forEach((ch) => {
+          if (/\s/.test(ch)) { frag.appendChild(document.createTextNode(ch)); return; }
+          const sp = document.createElement("span"); sp.className = "t3"; sp.textContent = ch; frag.appendChild(sp); chars.push(sp);
+        });
+        n.replaceWith(frag);
+      } else if (n.nodeType === 1) split(n);
+    });
+  };
+  // wait for the intro reveal to finish so we don't fight its transforms
+  setTimeout(() => {
+    split(h.querySelector(".dt-script")); h.querySelectorAll(".dt-bold .split-line > span").forEach(split);
+    h.classList.add("is-3d");
+    let mx = 0, my = 0, tx = 0, ty = 0, px = -9999, visible = true, rects = [];
+    const measure = () => { rects = chars.map((c) => { const r = c.getBoundingClientRect(); return r.left + r.width / 2; }); };
+    measure(); window.addEventListener("resize", measure);
+    new IntersectionObserver((en) => (visible = en[0].isIntersecting)).observe(h);
+    if (fine) window.addEventListener("mousemove", (e) => { tx = e.clientX / window.innerWidth * 2 - 1; ty = e.clientY / window.innerHeight * 2 - 1; px = e.clientX; }, { passive: true });
+    gsap.ticker.add((time) => {
+      if (!visible) return;
+      if (!fine) { tx = Math.sin(time * 0.5) * 0.6; ty = Math.cos(time * 0.4) * 0.4; px = window.innerWidth * (0.5 + Math.sin(time * 0.5) * 0.4); }
+      mx += (tx - mx) * 0.07; my += (ty - my) * 0.07;
+      h.style.transform = `perspective(1100px) rotateX(${(-my * 7).toFixed(2)}deg) rotateY(${(mx * 9).toFixed(2)}deg)`;
+      h.style.setProperty("--sx", (-mx * 5).toFixed(2) + "px"); h.style.setProperty("--sy", (-my * 5).toFixed(2) + "px");
+      chars.forEach((c, i) => {
+        const d = (px - rects[i]) / 260, f = Math.exp(-d * d);   // letters near the cursor react most
+        c.style.transform = `translateY(${(-f * 3).toFixed(1)}px) rotateY(${(Math.max(-1, Math.min(1, d)) * 28 * f).toFixed(1)}deg)`;
+      });
+    });
+  }, 2200);
 }
 
 /* ---------- inner page reveals ---------- */
@@ -704,6 +775,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTimeline();
   initHomeGL();
   initCardTilt();
+  initTitle3D();
   initCareerHint();
   initBrandsReveal();
   initRevealHints();
