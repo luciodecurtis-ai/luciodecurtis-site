@@ -220,7 +220,29 @@ function initHomeScroll() {
   });
 
   const hint = document.querySelector(".scroll-hint");
-  if (hint) ScrollTrigger.create({ start: 40, onEnter: () => gsap.to(hint, { opacity: 0, duration: 0.4 }), onLeaveBack: () => gsap.to(hint, { opacity: 0.7, duration: 0.4 }) });
+  if (hint) {
+    // centre the arrow between the first slide's link and the bottom name bar
+    const place = () => {
+      const link = items[0].querySelector(".home-link"), bar = document.querySelector(".nav-row.is-bottom");
+      if (!link || !bar) return;
+      const a = link.getBoundingClientRect().bottom, b = bar.getBoundingClientRect().top;
+      hint.style.top = ((a + b) / 2 - hint.offsetHeight / 2) + "px";
+    };
+    place(); window.addEventListener("resize", place);
+    if (document.fonts) document.fonts.ready.then(place);
+    setTimeout(() => hint.classList.add("is-in"), document.documentElement.classList.contains("no-loader") ? 1200 : 3200);
+    ScrollTrigger.create({ start: 40, onEnter: () => hint.classList.add("is-gone"), onLeaveBack: () => hint.classList.remove("is-gone") });
+  }
+
+  // standing still on a slide for 2s makes its link glow
+  let idleT, activeIdx = 0;
+  const idleOff = () => document.querySelectorAll(".home-link.is-idle").forEach((l) => l.classList.remove("is-idle"));
+  const armIdle = () => {
+    clearTimeout(idleT); idleOff();
+    idleT = setTimeout(() => items[activeIdx] && items[activeIdx].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 2000);
+  };
+  document.addEventListener("home:active", (ev) => { activeIdx = ev.detail; if (window.scrollY > 40) armIdle(); });
+  window.addEventListener("scroll", armIdle, { passive: true });
 }
 
 /* ---------- inner page reveals ---------- */
