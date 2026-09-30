@@ -1161,3 +1161,10 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .mk-video figcaption b { display: block; font: 900 1.5rem/1 var(--f-title); text-transform: uppercase; }
 .mk-video figcaption span { display: block; margin-top: .3rem; color: rgba(255,255,255,.55); font-size: .82rem; }
 @media (max-width: 767px) { .mk-videos { grid-template-columns: 1fr; } .mk-play { width: 3.8rem; height: 3.8rem; margin: -1.9rem 0 0 -1.9rem; } }
+/* v41e: results grid */
+.mk-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr)); gap: 1rem; }
+.mk-stat-c { padding: 1.5rem 1.4rem; border-radius: 1.2rem; border: 1px solid rgba(255,255,255,.12); background: radial-gradient(120% 90% at 100% 0%, rgba(200,255,58,.1), transparent 55%), #121212; }
+.mk-stat-c b { display: block; font: 900 clamp(2.4rem, 3.6vw, 3.4rem)/.85 var(--f-title); color: #c8ff3a; text-shadow: 0 0 26px rgba(200,255,58,.3); }
+.mk-stat-c span { display: block; margin-top: .6rem; color: rgba(255,255,255,.65); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; line-height: 1.35; }
+@media (max-width: 767px) { .mk-stats { grid-template-columns: 1fr 1fr; } .mk-stat-c { padding: 1.2rem 1rem; } }
+@media (min-width: 992px) { .work-grid > .wc-end:nth-child(3n+1):last-child { grid-column: 1 / -1; aspect-ratio: auto; min-height: 17rem; } }
