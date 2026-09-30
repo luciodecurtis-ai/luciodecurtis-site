@@ -363,6 +363,18 @@ function initCareerHint() {
     navHint(link);
   });
 }
+/* ---------- Work: after load, an arrow points at "Full Stack Marketer" ---------- */
+function initMarketerHint() {
+  const btn = document.querySelector('.tab-btn[data-tab="marketer"]');
+  if (!btn) return;
+  const hint = document.createElement("span");
+  hint.className = "tab-hint"; hint.setAttribute("aria-hidden", "true");
+  hint.innerHTML = '<svg viewBox="0 0 16 12" aria-hidden="true"><path d="M15 6H1.5M6 1.5 1.5 6 6 10.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span>110 collaborazioni in 9 anni</span>';
+  btn.appendChild(hint);
+  setTimeout(() => hint.classList.add("is-in"), 1600);
+  btn.addEventListener("click", () => hint.classList.remove("is-in"), { once: true });
+}
+
 /* ---------- Career: brand logos cascade in + count up ---------- */
 function initBrandsReveal() {
   const sec = document.querySelector(".brands");
@@ -551,6 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initRevealHints();
   initGalleryGuide();
   initTapeSpeed();
+  initMarketerHint();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());

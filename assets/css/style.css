@@ -972,3 +972,20 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
   color: #fff; font-size: .72rem; font-weight: 700; letter-spacing: .05em; font-variant-numeric: tabular-nums; opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .4s; }
 .gal-count.is-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .end-cta-btn, .end-cta-btn svg, .gal-hint svg, .gal-hint span { animation: none; } }
+/* ---------- v31: Work — hint next to "Full Stack Marketer" ---------- */
+.tab-btn[data-tab="marketer"] { position: relative; }
+.tab-hint { position: absolute; left: calc(100% + .8rem); top: 50%; display: flex; align-items: center; gap: .55rem; white-space: nowrap; pointer-events: none;
+  transform: translate(10px, -50%); opacity: 0; transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+.tab-hint.is-in { opacity: 1; transform: translate(0, -50%); }
+.tab-hint svg { width: 1.1rem; height: .85rem; color: #c8ff3a; flex: none; animation: hint-left 1.6s cubic-bezier(.3,0,.3,1) infinite, hint-glow 1.6s ease-in-out infinite; }
+.tab-hint span { font: 700 .72rem/1 var(--f-body); letter-spacing: .05em; text-transform: uppercase; animation: hint-text 1.6s ease-in-out infinite; }
+@keyframes hint-left { 0%, 100% { transform: translateX(0); } 40% { transform: translateX(-6px); } 60% { transform: translateX(-4px); } }
+@media (max-width: 767px) {
+  .filter-flex { margin-bottom: 3.6rem; }
+  .tab-hint { left: auto; right: 0; top: calc(100% + .7rem); flex-direction: row-reverse; transform: translateY(-6px); }
+  .tab-hint.is-in { transform: none; }
+  .tab-hint svg { transform: rotate(90deg); animation: hint-glow 1.6s ease-in-out infinite; }
+}
+@media (prefers-reduced-motion: reduce) { .tab-hint svg, .tab-hint span { animation: none; } .tab-hint span { color: #c8ff3a; } }
+.tab-hint span { color: #c8ff3a; animation: hint-fluo 1.6s ease-in-out infinite; }
+@keyframes hint-fluo { 0%, 100% { opacity: .6; text-shadow: none; } 45% { opacity: 1; text-shadow: 0 0 8px rgba(200,255,58,.9), 0 0 18px rgba(200,255,58,.5); } }
