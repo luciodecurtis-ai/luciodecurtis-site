@@ -88,7 +88,15 @@ function initTransitions() {
     });
   });
   window.addEventListener("pageshow", (e) => {
-    if (e.persisted) gsap.set([L, R], { yPercent: (i) => (i ? 100 : -100) });
+    if (!e.persisted) return;
+    // back/forward cache: the page comes back exactly as we left it (mid-transition) — reset it
+    gsap.globalTimeline.getChildren(true, true, false).forEach((t) => { if (t.vars && t.vars.onComplete && !t.scrollTrigger) t.kill(); });
+    gsap.set([L, R], { yPercent: (i) => (i ? 100 : -100) });
+    document.querySelectorAll(".ptc-overlay").forEach((o) => o.remove());
+    gsap.set(".page_main, .page_scroll", { clearProps: "opacity" });
+    document.body.style.overflow = "";
+    lenis && lenis.start();
+    ScrollTrigger.refresh();
   });
 }
 
@@ -368,7 +376,7 @@ function initHomeGL() {
 function initCardTilt() {
   if (reduced || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
   document.querySelectorAll(".wc").forEach((card) => {
-    const glare = document.createElement("span"); glare.className = "wc-glare"; card.appendChild(glare);
+    const glare = document.createElement("span"); glare.className = "wc-glare"; (card.querySelector(".wc-media") || card).appendChild(glare);
     const txt = card.querySelector(".wc-txt"), chip = card.querySelector(".wc-chip");
     const set = { rx: gsap.quickTo(card, "rotationX", { duration: 0.6, ease: "power3.out" }), ry: gsap.quickTo(card, "rotationY", { duration: 0.6, ease: "power3.out" }) };
     const tx = txt && { x: gsap.quickTo(txt, "x", { duration: 0.6, ease: "power3.out" }), y: gsap.quickTo(txt, "y", { duration: 0.6, ease: "power3.out" }) };
@@ -773,7 +781,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initStory();
   initWorkTabs();
   initTimeline();
-  initHomeGL();
+  // initHomeGL();  — disabled: Lucio prefers the plain, fluid slider
   initCardTilt();
   initTitle3D();
   initCareerHint();
