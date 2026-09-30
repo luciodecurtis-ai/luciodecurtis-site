@@ -239,7 +239,7 @@ function initHomeScroll() {
   const idleOff = () => document.querySelectorAll(".home-link.is-idle").forEach((l) => l.classList.remove("is-idle"));
   const armIdle = () => {
     clearTimeout(idleT); idleOff();
-    idleT = setTimeout(() => items[activeIdx] && items[activeIdx].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 2000);
+    idleT = setTimeout(() => items[activeIdx] && items[activeIdx].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 1000);
   };
   document.addEventListener("home:active", (ev) => { activeIdx = ev.detail; if (window.scrollY > 40) armIdle(); });
   window.addEventListener("scroll", armIdle, { passive: true });
