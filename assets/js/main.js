@@ -783,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTimeline();
   // initHomeGL();  — disabled: Lucio prefers the plain, fluid slider
   initCardTilt();
-  initTitle3D();
+  // initTitle3D();  — disabled on request: static career title
   initCareerHint();
   initBrandsReveal();
   initRevealHints();
