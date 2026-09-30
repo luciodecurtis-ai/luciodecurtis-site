@@ -13,7 +13,8 @@ let lenis = null;
 
 /* ---------- smooth scroll ---------- */
 function initLenis() {
-  if (typeof Lenis === "undefined" || reduced) return;
+  // touch devices keep native scrolling (smoother on iOS, no stuck positions near the top)
+  if (typeof Lenis === "undefined" || reduced || window.matchMedia("(hover: none) and (pointer: coarse)").matches) return;
   lenis = new Lenis({ lerp: 0.1 });
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
@@ -545,6 +546,17 @@ function fitDualTitle() {
 }
 
 /* ---------- boot ---------- */
+// mobile: the address bar showing/hiding must not recalculate every scroll animation
+ScrollTrigger.config({ ignoreMobileResize: true });
+// recompute trigger positions once late images/fonts have changed the layout
+(() => {
+  let t;
+  const later = () => { clearTimeout(t); t = setTimeout(() => ScrollTrigger.refresh(), 200); };
+  window.addEventListener("load", later);
+  document.addEventListener("load", (e) => { if (e.target.tagName === "IMG") later(); }, true);
+  if (document.fonts) document.fonts.ready.then(later);
+})();
+
 document.addEventListener("DOMContentLoaded", () => {
   history.scrollRestoration = "manual";
   window.scrollTo(0, 0);

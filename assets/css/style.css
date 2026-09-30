@@ -989,3 +989,5 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 @media (prefers-reduced-motion: reduce) { .tab-hint svg, .tab-hint span { animation: none; } .tab-hint span { color: #c8ff3a; } }
 .tab-hint span { color: #c8ff3a; animation: hint-fluo 1.6s ease-in-out infinite; }
 @keyframes hint-fluo { 0%, 100% { opacity: .6; text-shadow: none; } 45% { opacity: 1; text-shadow: 0 0 8px rgba(200,255,58,.9), 0 0 18px rgba(200,255,58,.5); } }
+/* v32: mobile — career title clear of the top nav gradient */
+@media (max-width: 767px) { body.is-career .info-hero { padding-top: 6.2rem; } }
