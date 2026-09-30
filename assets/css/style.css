@@ -721,8 +721,8 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .brand::after { content: ""; position: absolute; right: 0; top: 30%; bottom: 30%; width: 1px; background: rgba(255,255,255,.1); }
 .brand img { display: block; object-fit: contain; opacity: .72; filter: grayscale(.15);
   transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1), filter .6s; }
-.brand-row:hover .brand-track { animation-play-state: paused; }
-.brand-marquee:hover .brand img { opacity: .35; }
+@media (hover: hover) and (pointer: fine) { .brand-row:hover .brand-track { animation-play-state: paused; } }
+@media (hover: hover) and (pointer: fine) { .brand-marquee:hover .brand img { opacity: .35; } }
 .brand-marquee .brand:hover img { opacity: 1; filter: none; transform: scale(1.14); }
 @media (max-width: 767px) {
   .brands { padding: 3.6rem 0 3.4rem; }
@@ -1036,7 +1036,8 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .tst-title em { font-style: normal; color: #c8ff3a; }
 .tst-belt { overflow: hidden; perspective: 1800px; padding: 2rem 0; }
 .tst-track { display: flex; gap: 1.4rem; width: max-content; transform: rotateY(-10deg) rotateX(4deg); transform-style: preserve-3d; animation: tst-belt 75s linear infinite; }
-.tst-belt:hover .tst-track, .tst-belt.is-held .tst-track { animation-play-state: paused; }
+.tst-belt.is-held .tst-track { animation-play-state: paused; }
+@media (hover: hover) and (pointer: fine) { .tst-belt:hover .tst-track { animation-play-state: paused; } }
 @keyframes tst-belt { to { transform: rotateY(-10deg) rotateX(4deg) translateX(calc(-50% - .7rem)); } }
 .tk { position: relative; flex: none; width: min(38rem, 82vw); min-height: 25rem; border-radius: 1.6rem; padding: 2rem 2.2rem; display: flex; flex-direction: column; gap: 1.3rem; overflow: hidden;
   background: radial-gradient(120% 90% at 100% 0%, rgba(200,255,58,.13), transparent 55%), #141414; border: 1px solid rgba(255,255,255,.12); transition: border-color .45s, box-shadow .45s; }
