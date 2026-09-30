@@ -1125,3 +1125,26 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
   .mk-gal.is-wide2, .mk-comments { grid-template-columns: 1fr; }
   .mk-compare { gap: 1.6rem; }
 }
+/* v41c: branding blocks — values, statements, palette, 16:9 gallery */
+.mk-gal.is-wide16 { grid-template-columns: repeat(2, 1fr); } .mk-gal.is-wide16 .mk-fig { aspect-ratio: 16 / 9; }
+.mk-vals { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: 1rem; }
+.mk-val { position: relative; padding: 1.6rem 1.5rem; border-radius: 1.2rem; border: 1px solid rgba(255,255,255,.12); overflow: hidden;
+  background: radial-gradient(120% 90% at 100% 0%, rgba(200,255,58,.1), transparent 55%), #121212; }
+.mk-val-n { color: #c8ff3a; font: 700 .75rem/1 var(--f-body); letter-spacing: .08em; }
+.mk-val b { display: block; margin-top: 1.2rem; font: 900 clamp(1.8rem, 2.6vw, 2.4rem)/.9 var(--f-title); text-transform: uppercase; }
+.mk-val p { margin: .8rem 0 0; color: rgba(255,255,255,.65); font-size: .92rem; line-height: 1.5; }
+.mk-statements { display: flex; flex-direction: column; }
+.mk-st { display: grid; grid-template-columns: 10rem 1fr; gap: 2rem; padding: 2.4rem 0; border-top: 1px solid rgba(255,255,255,.12); align-items: baseline; }
+.mk-st:last-child { border-bottom: 1px solid rgba(255,255,255,.12); }
+.mk-st p { margin: 0; font: 900 clamp(1.8rem, 3.4vw, 3.2rem)/.95 var(--f-title); text-transform: uppercase; max-width: 60rem; }
+.mk-palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: 1rem; }
+.mk-sw { display: flex; flex-direction: column; gap: .35rem; }
+.mk-sw-c { display: block; aspect-ratio: 1; border-radius: 1.2rem; border: 1px solid rgba(255,255,255,.12); margin-bottom: .6rem; }
+.mk-sw b { font: 900 1.3rem/1 var(--f-title); text-transform: uppercase; }
+.mk-sw code { font: 600 .82rem/1 var(--f-body); color: #c8ff3a; letter-spacing: .04em; }
+.mk-sw small { color: rgba(255,255,255,.5); font-size: .75rem; }
+@media (max-width: 767px) {
+  .mk-gal.is-wide16 { grid-template-columns: 1fr; }
+  .mk-st { grid-template-columns: 1fr; gap: .8rem; padding: 1.8rem 0; }
+  .mk-palette { grid-template-columns: repeat(2, 1fr); }
+}
