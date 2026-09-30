@@ -587,6 +587,14 @@ function initMarketerHint() {
   btn.addEventListener("click", () => hint.classList.remove("is-in"), { once: true });
 }
 
+/* ---------- Career: testimonials belt — touch & hold to pause on phones ---------- */
+function initTestimonials() {
+  const b = document.querySelector("[data-tst]");
+  if (!b) return;
+  b.addEventListener("touchstart", () => b.classList.add("is-held"), { passive: true });
+  ["touchend", "touchcancel"].forEach((ev) => b.addEventListener(ev, () => b.classList.remove("is-held"), { passive: true }));
+}
+
 /* ---------- Career: brand logos cascade in + count up ---------- */
 function initBrandsReveal() {
   const sec = document.querySelector(".brands");
@@ -790,6 +798,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initGalleryGuide();
   initTapeSpeed();
   initMarketerHint();
+  initTestimonials();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());
