@@ -1168,3 +1168,4 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .mk-stat-c span { display: block; margin-top: .6rem; color: rgba(255,255,255,.65); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; line-height: 1.35; }
 @media (max-width: 767px) { .mk-stats { grid-template-columns: 1fr 1fr; } .mk-stat-c { padding: 1.2rem 1rem; } }
 @media (min-width: 992px) { .work-grid > .wc-end:nth-child(3n+1):last-child { grid-column: 1 / -1; aspect-ratio: auto; min-height: 17rem; } }
+.mk-block.is-tight { margin-top: 1rem; } .brands-work { padding-top: 2rem; }
