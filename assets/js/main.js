@@ -334,22 +334,35 @@ function initFilters() {
 }
 
 /* ---------- Home: after the first 3 slides, a small arrow invites to Career ---------- */
-function initCareerHint() {
-  const link = document.querySelector('.nav-row.is-top a[href="career.html"]');
-  if (!link || !document.querySelector(".home-projects-list")) return;
-  let shown = false;
-  document.addEventListener("home:active", (ev) => {
-    if (shown || ev.detail < 3) return;
-    shown = true;
+function navHint(link) {
     const hint = document.createElement("span");
     hint.className = "career-hint";
     hint.innerHTML = '<svg viewBox="0 0 12 16" aria-hidden="true"><path d="M6 15V2M1.5 6.5 6 2l4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     link.appendChild(hint);
     link.classList.add("has-hint");
     requestAnimationFrame(() => requestAnimationFrame(() => hint.classList.add("is-in")));
+}
+function initCareerHint() {
+  // career page: near the end, point at "Work"
+  const work = document.querySelector('body.is-career .nav-row.is-top a[href^="work.html"]');
+  if (work) {
+    let done = false;
+    const check = () => {
+      if (done) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max > 0 && window.scrollY / max > 0.85) { done = true; navHint(work); window.removeEventListener("scroll", check); }
+    };
+    window.addEventListener("scroll", check, { passive: true });
+  }
+  const link = document.querySelector('.nav-row.is-top a[href="career.html"]');
+  if (!link || !document.querySelector(".home-projects-list")) return;
+  let shown = false;
+  document.addEventListener("home:active", (ev) => {
+    if (shown || ev.detail < 3) return;
+    shown = true;
+    navHint(link);
   });
 }
-
 /* ---------- Career: brand logos cascade in + count up ---------- */
 function initBrandsReveal() {
   const sec = document.querySelector(".brands");
