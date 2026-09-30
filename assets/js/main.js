@@ -595,6 +595,17 @@ function initTestimonials() {
   ["touchend", "touchcancel"].forEach((ev) => b.addEventListener(ev, () => b.classList.remove("is-held"), { passive: true }));
 }
 
+/* ---------- case studies: YouTube players load only when clicked ---------- */
+function initVideoFacades() {
+  document.querySelectorAll("[data-yt]").forEach((b) => b.addEventListener("click", () => {
+    if (b.classList.contains("is-playing")) return;
+    const f = document.createElement("iframe");
+    f.src = `https://www.youtube-nocookie.com/embed/${b.dataset.yt}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    f.title = b.getAttribute("aria-label") || "Video"; f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen"; f.allowFullscreen = true;
+    b.classList.add("is-playing"); b.appendChild(f);
+  }));
+}
+
 /* ---------- Career: brand logos cascade in + count up ---------- */
 function initBrandsReveal() {
   const sec = document.querySelector(".brands");
@@ -799,6 +810,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTapeSpeed();
   initMarketerHint();
   initTestimonials();
+  initVideoFacades();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
     initLoader(() => ScrollTrigger.refresh());
