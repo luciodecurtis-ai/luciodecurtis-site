@@ -43,34 +43,25 @@ function initTransitions() {
       .to(L, { yPercent: -100, duration: 1, ease: "expo.inOut" }, 0)
       .to(R, { yPercent: 100, duration: 1, ease: "expo.inOut" }, 0);
   }
-  // arriving from a project card: the photo that filled the screen lifts away in 3D
+  // arriving from a project card: the page comes into focus from a soft blur
   const D = document.documentElement;
-  if (D.classList.contains("ptc-in")) {
-    const ov = document.createElement("div"); ov.className = "ptc-overlay";
-    ov.style.backgroundImage = `url(${JSON.stringify(D.dataset.ptc)})`;
-    document.body.appendChild(ov); D.classList.remove("ptc-in");
-    gsap.timeline({ delay: 0.15, onComplete: () => ov.remove() })
-      .to(ov, { yPercent: -100, rotationX: 14, transformPerspective: 1200, transformOrigin: "50% 100%", duration: 1.15, ease: "expo.inOut" }, 0)
-      .to(ov, { filter: "brightness(.55)", duration: 0.8, ease: "power2.in" }, 0);
+  const PAGE = ".page_main, .page_scroll";
+  if (D.classList.contains("pb-in")) {
+    // the fixed footer sits behind the page: keep it hidden until the page is opaque again
+    gsap.set(".footer", { autoAlpha: 0 });
+    gsap.delayedCall(1, () => gsap.set(".footer", { clearProps: "opacity,visibility" }));
+    gsap.fromTo(PAGE, { opacity: 0, filter: "blur(18px)", scale: 1.015 },
+      { opacity: 1, filter: "blur(0px)", scale: 1, duration: 0.9, ease: "power2.out", delay: 0.05,
+        onStart: () => D.classList.remove("pb-in"), clearProps: "opacity,filter,transform" });
   }
-  // leaving through a project card: the card's photo grows into a full-screen cover
-  const cardExpand = (a, href) => {
-    const wrap = a.matches(".wc") ? a : a.closest(".home-projects-item")?.querySelector(".home-project-visual-wrap");
-    const img = wrap && wrap.querySelector("img");
-    if (!img || !img.currentSrc) return false;
-    const r = wrap.getBoundingClientRect();
-    const box = document.createElement("div"); box.className = "ptc-overlay is-out";
-    box.style.backgroundImage = `url(${JSON.stringify(img.currentSrc)})`;
-    Object.assign(box.style, { left: r.left + "px", top: r.top + "px", width: r.width + "px", height: r.height + "px", borderRadius: getComputedStyle(wrap).borderRadius });
-    document.body.appendChild(box);
-    try { sessionStorage.setItem("ptc", img.currentSrc); } catch (e) {}
+  // leaving through a project card: the page melts into a blur (no full-screen photo)
+  const cardBlur = (href) => {
+    store.set("pb", "1");
     lenis && lenis.stop();
     gsap.timeline({ onComplete: () => (location.href = href) })
-      .to(box, { rotationX: 10, transformPerspective: 1200, duration: 0.35, ease: "power2.out" }, 0)
-      .to(box, { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight, borderRadius: 0, duration: 0.85, ease: "expo.inOut" }, 0.05)
-      .to(box, { rotationX: 0, duration: 0.6, ease: "power3.inOut" }, 0.35)
-      .to(".page_main, .page_scroll", { opacity: 0.3, duration: 0.6 }, 0);
-    return true;
+      .to(PAGE, { opacity: 0, filter: "blur(18px)", scale: 0.985, duration: 0.55, ease: "power2.in" }, 0)
+      .to(".nav", { opacity: 0, duration: 0.4, ease: "power2.in" }, 0.1)
+      .to("body:not(.is-home) .footer", { autoAlpha: 0, duration: 0.15 }, 0);
   };
   document.querySelectorAll("a[href]").forEach((a) => {
     const href = a.getAttribute("href");
@@ -79,7 +70,7 @@ function initTransitions() {
     a.addEventListener("click", (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey) return;
       e.preventDefault();
-      if (!reduced && href.startsWith("project-") && (a.matches(".wc") || a.matches(".home-link")) && cardExpand(a, href)) return;
+      if (!reduced && href.startsWith("project-") && (a.matches(".wc") || a.matches(".home-link") || a.closest(".next-project, .mk-next"))) return cardBlur(href);
       store.set("pt", "1");
       lenis && lenis.stop();
       gsap.timeline({ onComplete: () => (location.href = href) })
@@ -92,8 +83,7 @@ function initTransitions() {
     // back/forward cache: the page comes back exactly as we left it (mid-transition) — reset it
     gsap.globalTimeline.getChildren(true, true, false).forEach((t) => { if (t.vars && t.vars.onComplete && !t.scrollTrigger) t.kill(); });
     gsap.set([L, R], { yPercent: (i) => (i ? 100 : -100) });
-    document.querySelectorAll(".ptc-overlay").forEach((o) => o.remove());
-    gsap.set(".page_main, .page_scroll", { clearProps: "opacity" });
+    gsap.set([".page_main, .page_scroll", ".nav", ".footer"], { clearProps: "opacity,filter,transform,visibility" });
     document.body.style.overflow = "";
     lenis && lenis.start();
     ScrollTrigger.refresh();
@@ -124,13 +114,16 @@ function initLoader(done) {
     .to(a, { duration: 0.8, text: { value: "LUCIO", delimiter: "" }, ease: "none" }, 0)
     .to(b, { duration: 0.8, text: { value: "DE CURTIS", delimiter: "" }, ease: "none" }, 0)
     .to(m, { opacity: 1, duration: 0.3 }, 0.6)
+    // iOS-style: the name softens into a blur, swaps font while it can't be read, then sharpens on its way down
+    .to(row, { filter: "blur(14px)", opacity: 0.25, duration: 0.32, ease: "power2.in" }, "+=0.35")
+    .to(count, { opacity: 0, duration: 0.3 }, "<")
     .add(() => {
       const state = Flip.getState([a, m, b], { props: "fontSize,letterSpacing" });
       row.classList.add("is-done");
-      Flip.from(state, { duration: 1.3, ease: "expo.inOut", absolute: false });
-      gsap.to(count, { opacity: 0, duration: 0.3 });
-    }, "+=0.35")
-    .to(bkL, { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, "+=0.95")
+      Flip.from(state, { duration: 1.2, ease: "expo.inOut", absolute: false });
+    })
+    .to(row, { filter: "blur(0px)", opacity: 1, duration: 0.75, ease: "power2.out" }, ">0.12")
+    .to(bkL, { yPercent: -100, duration: 1.1, ease: "expo.inOut" }, "+=0.3")
     .to(bkR, { yPercent: 100, duration: 1.1, ease: "expo.inOut" }, "<")
     .to(nav, { opacity: 1, duration: 0.4, ease: "power2.inOut" }, "+=0.2")
     .to(row, { opacity: 0, duration: 0.4, ease: "power2.inOut", onComplete: () => {
@@ -150,18 +143,14 @@ function initHomeScroll() {
   let items = [...list.querySelectorAll(".home-projects-item")];
   if (!items.length) return;
 
-  const total = items.length + 1;          // + clone of the first for the loop
+  // two intro slides, then a short dwell before the "scegli il percorso" section arrives
+  const total = items.length;
   const nTrig = total + 1;
   trigWrap.innerHTML = "";
   for (let i = 0; i < nTrig; i++) trigWrap.insertAdjacentHTML("beforeend", '<div class="home-trigger"></div>');
   const trigs = [...trigWrap.querySelectorAll(".home-trigger")];
-  trigWrap.style.height = 100 * total + 75 + "vh";
-  trigs[trigs.length - 1].style.height = "75vh";
-
-  const clone = items[0].cloneNode(true);
-  clone.setAttribute("aria-hidden", "true");
-  list.appendChild(clone);
-  items = [...list.querySelectorAll(".home-projects-item")];
+  trigWrap.style.height = 100 * total + 70 + "vh";
+  trigs[trigs.length - 1].style.height = "70vh";
 
   const S = items.map((el, i) => {
     const v = el.querySelectorAll(".home-project-visual-wrap");
@@ -197,8 +186,7 @@ function initHomeScroll() {
       s.el.style.visibility = Math.abs(t - e) <= 1 ? "visible" : "hidden";
     });
     document.querySelectorAll("[data-home-counter]").forEach((c) => {
-      const n = (e % (S.length - 1)) + 1;
-      c.textContent = String(n).padStart(2, "0") + " / " + String(S.length - 1).padStart(2, "0");
+      c.textContent = String(e + 1).padStart(2, "0") + " / " + String(S.length).padStart(2, "0");
     });
     document.dispatchEvent(new CustomEvent("home:active", { detail: e }));
   }
@@ -238,25 +226,6 @@ function initHomeScroll() {
     });
   });
 
-  // seamless loop: once the clone is fully in, jump back to the matching spot at the top
-  const getScroll = ScrollTrigger.getScrollFunc(window);
-  let looping = false;
-  gsap.ticker.add(() => {
-    if (looping) return;
-    const a = sts[1], z = sts[total - 1];
-    if (!a || !z) return;
-    const range = z.end - a.start, y = getScroll();
-    if (range <= 0 || y <= z.end) return;
-    const to = y - range;
-    looping = true;
-    lenis ? lenis.scrollTo(to, { immediate: true, force: true }) : window.scrollTo(0, to);
-    ScrollTrigger.update();
-    let idx = 0;
-    for (let e = 1; e < total; e++) if (sts[e] && to >= sts[e].end) idx = e;
-    setActive(idx);
-    looping = false;
-  });
-
   const hint = document.querySelector(".scroll-hint");
   if (hint) {
     // centre the arrow between the first slide's link and the bottom name bar
@@ -280,6 +249,44 @@ function initHomeScroll() {
     if (window.scrollY <= 40) return;
     idleT = setTimeout(() => items[ev.detail] && items[ev.detail].querySelectorAll(".home-link").forEach((l) => l.classList.add("is-idle")), 250);
   });
+}
+
+
+/* ---------- HOME: "scegli il percorso" — the slides fall back into depth, the choices fly in in 3D ---------- */
+function initHomePick() {
+  const sec = document.querySelector("[data-hpick]");
+  const list = document.querySelector(".home-projects-list");
+  if (!sec || !list) return;
+  const q = (s) => sec.querySelectorAll(s);
+  const band = sec.querySelector(".hp-band"), works = [...q(".hp-work")];
+  if (reduced) { gsap.set(list, { autoAlpha: 0 }); return; }
+
+  // 1) while the section rises: the slides recede (tilt + scale + fade), the grid glow fades in
+  gsap.timeline({ scrollTrigger: { trigger: sec, start: "top bottom", end: "top top", scrub: true } })
+    .fromTo(list, { scale: 1, rotationX: 0, yPercent: 0, autoAlpha: 1, transformPerspective: 1400, transformOrigin: "50% 100%" },
+      { scale: .78, rotationX: 14, yPercent: -10, autoAlpha: 0, ease: "power1.in" }, 0)
+    .fromTo(sec.querySelector(".hpick-bg"), { opacity: 0 }, { opacity: 1, ease: "none" }, 0)
+    .fromTo(q(".hpick-kick"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, ease: "power2.out", duration: .4 }, .55)
+    .fromTo(q(".hpick-title .hl > *"), { yPercent: 110, rotationX: -70 }, { yPercent: 0, rotationX: 0, stagger: .12, ease: "power3.out", duration: .45 }, .5);
+
+  // 2) pinned: Career band drops in from above, the two work cards swing open like doors
+  const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top top", end: "+=" + Math.round(window.innerHeight * 1.1), pin: true, scrub: .6, anticipatePin: 1, invalidateOnRefresh: true } });
+  tl.fromTo(band, { z: -500, rotationX: 70, yPercent: -60, opacity: 0, transformOrigin: "50% 0%" }, { z: 0, rotationX: 0, yPercent: 0, opacity: 1, ease: "power3.out", duration: .55 }, 0)
+    .fromTo(band.querySelector(".hp-line"), { scaleX: 0 }, { scaleX: 1, ease: "power2.inOut", duration: .5 }, .25)
+    .fromTo(band.querySelectorAll(".hp-rail span"), { opacity: 0, y: 8 }, { opacity: 1, y: 0, stagger: .06, duration: .2 }, .3)
+    .fromTo(band.querySelectorAll(".hp-av, .hp-bt, .hp-cta"), { opacity: 0, x: -20 }, { opacity: 1, x: 0, stagger: .07, duration: .3 }, .2);
+  works.forEach((c, i) => {
+    const s = i ? -1 : 1;
+    tl.fromTo(c, { z: -900, xPercent: -40 * s, rotationY: 42 * s, rotationZ: -4 * s, opacity: 0, transformOrigin: i ? "100% 50%" : "0% 50%" },
+      { z: 0, xPercent: 0, rotationY: 0, rotationZ: 0, opacity: 1, ease: "power3.out", duration: .8 }, .3 + i * .12)
+      .fromTo(c.querySelector("img"), { scale: 1.35 }, { scale: 1, ease: "power2.out", duration: .9 }, .3 + i * .12)
+      .fromTo(c.querySelectorAll(".hp-num, .hp-txt b, .hp-txt small, .hp-txt .hp-cta"), { opacity: 0, y: 26 }, { opacity: 1, y: 0, stagger: .06, ease: "power2.out", duration: .3 }, .75 + i * .12);
+  });
+  tl.to({}, { duration: .35 }); // short hold once everything has landed
+
+  // the bottom name bar slides away when the footer comes in
+  const ft = document.querySelector(".footer");
+  if (ft) gsap.to(".nav-row.is-bottom", { y: "4rem", ease: "none", scrollTrigger: { trigger: ft, start: "top bottom", end: "top 75%", scrub: true } });
 }
 
 /* ---------- HOME: WebGL "liquid" photos — bend with scroll speed, depth parallax with the mouse ---------- */
@@ -566,14 +573,6 @@ function initCareerHint() {
     };
     window.addEventListener("scroll", check, { passive: true });
   }
-  const link = document.querySelector('.nav-row.is-top a[href="career.html"]');
-  if (!link || !document.querySelector(".home-projects-list")) return;
-  let shown = false;
-  document.addEventListener("home:active", (ev) => {
-    if (shown || ev.detail < 3) return;
-    shown = true;
-    navHint(link);
-  });
 }
 /* ---------- Work: after load, an arrow points at "Full Stack Marketer" ---------- */
 function initMarketerHint() {
@@ -813,6 +812,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initVideoFacades();
   if (document.querySelector(".page_scroll")) {
     initHomeScroll();
+    initHomePick();
     initLoader(() => ScrollTrigger.refresh());
   } else {
     initIntro();
