@@ -586,12 +586,24 @@ function initMarketerHint() {
   btn.addEventListener("click", () => hint.classList.remove("is-in"), { once: true });
 }
 
-/* ---------- Career: testimonials belt — touch & hold to pause on phones ---------- */
+/* ---------- Career: testimonials selector — click a person to show the quote ---------- */
 function initTestimonials() {
-  const b = document.querySelector("[data-tst]");
-  if (!b) return;
-  b.addEventListener("touchstart", () => b.classList.add("is-held"), { passive: true });
-  ["touchend", "touchcancel"].forEach((ev) => b.addEventListener(ev, () => b.classList.remove("is-held"), { passive: true }));
+  const root = document.querySelector("[data-tst]");
+  if (!root) return;
+  const tabs = [...root.querySelectorAll(".tsel-btn")], panels = [...root.querySelectorAll(".tsel-panel")];
+  const sel = (i) => {
+    tabs.forEach((t, j) => { t.setAttribute("aria-selected", j === i); t.tabIndex = j === i ? 0 : -1; });
+    panels.forEach((p, j) => p.classList.toggle("is-on", j === i));
+    tabs[i].scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener("click", () => sel(i));
+    t.addEventListener("keydown", (e) => {
+      const d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (!d) return;
+      e.preventDefault(); const j = (i + d + tabs.length) % tabs.length; sel(j); tabs[j].focus();
+    });
+  });
 }
 
 /* ---------- case studies: YouTube players load only when clicked ---------- */
