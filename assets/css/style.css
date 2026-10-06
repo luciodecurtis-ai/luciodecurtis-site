@@ -1242,6 +1242,15 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
   .hp-bt small { font-size: .62rem; margin-top: .2rem; }
   .hp-rail { order: 3; flex: 1 0 100%; max-width: none; margin: .1rem 0 0; font-size: .74rem; }
 }
-body.is-home .footer { position: relative; z-index: 3; }
+body.is-home .footer { position: relative; z-index: 51; }
 html.pb-in .page_main, html.pb-in .page_scroll { opacity: 0; }
 html.pb-in body:not(.is-home) .footer { visibility: hidden; }
+/* v43: shorter footer on phones */
+@media (max-width: 767px) {
+  .footer { padding-top: 1.8rem; gap: 1.3rem; }
+  .footer-top { grid-template-columns: 1fr auto; row-gap: .9rem; font-size: .68rem; }
+  .footer-top .footer-col:last-child { display: none; }
+  .footer-top .footer-col:nth-child(2) { align-items: flex-end; text-align: right; }
+  .footer-word { flex-direction: row; flex-wrap: nowrap; gap: .22em; font-size: 14vw; line-height: .85; white-space: nowrap; }
+  .footer-bottom { flex-direction: row; justify-content: space-between; font-size: .62rem; }
+}
