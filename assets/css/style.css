@@ -622,7 +622,7 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
 .uc-btn:hover { transform: translateY(-2px); border-color: #fff; }
 .uc-btn.is-solid { background: #fff; color: #0b0b0b; border-color: #fff; }
 @media (max-width: 767px) { .uc-card { min-height: 0; } .uc-body { padding: 2.2rem 1.3rem 2.2rem; } .uc-tape-track span { font-size: 1.05rem; } }
-@media (prefers-reduced-motion: reduce) { .uc-tape-track, .uc-dot { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .uc-dot { animation: none; } }
 
 .clients-wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .8rem; margin-top: 1.6rem; }
 .client { margin: 0; border-radius: .8rem; overflow: hidden; background: #1c1819; aspect-ratio: 284 / 140;
@@ -731,7 +731,6 @@ body.is-career .about-split-grid[split-section="02"] .about-txt-flex { order: 0;
   .brand img { transform: scale(.78); }
   .brand-marquee .brand:hover img { transform: scale(.9); }
 }
-@media (prefers-reduced-motion: reduce) { .brand-track { animation: none; } .brand-row { flex-wrap: wrap; width: auto; } .brand-track[aria-hidden] { display: none; } }
 .brand { height: 9.5rem; padding: 0 3.6rem; }
 @media (max-width: 767px) { .brand { height: 6.4rem; padding: 0 2rem; } .brand img { transform: scale(.68); } .brand-marquee .brand:hover img { transform: scale(.8); } }
 /* mobile: at least 3 logos visible per row */
