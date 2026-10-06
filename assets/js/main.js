@@ -105,6 +105,10 @@ function initLoader(done) {
   const count = loader.querySelector(".loader-count");
   lenis && lenis.stop();
   document.body.style.overflow = "hidden";
+  // on iPhone body overflow doesn't stop the scroll: the loader catches the touches instead
+  Object.assign(loader.style, { pointerEvents: "auto", touchAction: "none" });
+  const block = (e) => e.preventDefault();
+  loader.addEventListener("touchmove", block, { passive: false });
   gsap.set(nav, { opacity: 0 });
   a.textContent = ""; b.textContent = ""; gsap.set(m, { opacity: 0 });
 
@@ -128,7 +132,9 @@ function initLoader(done) {
     .to(nav, { opacity: 1, duration: 0.4, ease: "power2.inOut" }, "+=0.2")
     .to(row, { opacity: 0, duration: 0.4, ease: "power2.inOut", onComplete: () => {
       loader.style.display = "none";
+      loader.removeEventListener("touchmove", block);
       document.body.style.overflow = "";
+      window.scrollTo(0, 0);
       lenis && lenis.start();
       done();
     } }, "<");
@@ -262,9 +268,12 @@ function initHomePick() {
   if (reduced) { gsap.set(list, { autoAlpha: 0 }); return; }
 
   // 1) while the section rises: the slides recede (tilt + scale + fade), the grid glow fades in
-  gsap.timeline({ scrollTrigger: { trigger: sec, start: "top bottom", end: "top top", scrub: true } })
-    .fromTo(list, { scale: 1, rotationX: 0, yPercent: 0, autoAlpha: 1, transformPerspective: 1400, transformOrigin: "50% 100%" },
-      { scale: .78, rotationX: 14, yPercent: -10, autoAlpha: 0, ease: "power1.in" }, 0)
+  // (the fixed slides are left untouched until this starts: iOS Safari can stop painting a transformed fixed layer)
+  const touch = window.matchMedia("(hover: none)").matches;
+  gsap.timeline({ scrollTrigger: { trigger: sec, start: "top bottom", end: "top top", scrub: true,
+      onLeaveBack: () => gsap.set(list, { clearProps: "transform,opacity,visibility" }) } })
+    .fromTo(list, { scale: 1, rotationX: 0, yPercent: 0, autoAlpha: 1, transformOrigin: "50% 100%", transformPerspective: touch ? 0 : 1400 },
+      { scale: touch ? .88 : .78, rotationX: touch ? 0 : 14, yPercent: -10, autoAlpha: 0, ease: "power1.in", immediateRender: false }, 0)
     .fromTo(sec.querySelector(".hpick-bg"), { opacity: 0 }, { opacity: 1, ease: "none" }, 0)
     .fromTo(q(".hpick-kick"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, ease: "power2.out", duration: .4 }, .55)
     .fromTo(q(".hpick-title .hl > *"), { yPercent: 110, rotationX: -70 }, { yPercent: 0, rotationX: 0, stagger: .12, ease: "power3.out", duration: .45 }, .5);
