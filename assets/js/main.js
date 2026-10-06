@@ -846,3 +846,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+
+/* ---------- diagnostics: open the site with ?debug to see what the phone is painting ---------- */
+if (/[?&]debug/.test(location.search)) {
+  const box = document.createElement("pre");
+  box.style.cssText = "position:fixed;left:6px;right:6px;bottom:70px;z-index:9999;max-height:55vh;overflow:auto;background:rgba(0,0,0,.85);color:#c8ff3a;font:10px/1.35 monospace;padding:8px;border-radius:8px;white-space:pre-wrap;pointer-events:none";
+  document.documentElement.appendChild(box);
+  const desc = (e) => { if (!e) return "null"; const c = getComputedStyle(e); return `${e.tagName.toLowerCase()}.${String(e.className).split(" ").slice(0, 2).join(".")} pos=${c.position} z=${c.zIndex} op=${c.opacity} vis=${c.visibility} tf=${c.transform.slice(0, 30)} filt=${c.filter} clip=${c.clipPath.slice(0, 26)}`; };
+  const chain = (e) => { const out = []; for (let i = 0; e && i < 9; e = e.parentElement, i++) out.push(desc(e)); return out.join("\n  ↑ "); };
+  const tick = () => {
+    const list = document.querySelector(".home-projects-list"), img = document.querySelector(".home-projects-item img"), sec = document.querySelector(".hpick");
+    const lr = list && list.getBoundingClientRect(), sr = sec && sec.getBoundingClientRect();
+    box.textContent = [
+      `v=${(document.querySelector('script[src*="main.js"]') || {}).src?.split("v=")[1]} ih=${innerHeight} iw=${innerWidth} y=${Math.round(scrollY)} hover:none=${matchMedia("(hover:none)").matches}`,
+      `list rect t=${lr && Math.round(lr.top)} h=${lr && Math.round(lr.height)} | ${desc(list)}`,
+      `img ${img && img.currentSrc.split("/").slice(-2).join("/")} complete=${img && img.complete} nw=${img && img.naturalWidth}`,
+      `hpick top=${sr && Math.round(sr.top)} ${desc(sec)}`,
+      `pt=${desc(document.querySelector(".pt-bk"))}`,
+      `html.class=${document.documentElement.className}`,
+      `center → ${chain(document.elementFromPoint(innerWidth / 2, innerHeight * 0.4))}`,
+      `title → ${chain(document.querySelector(".home-title"))}`,
+      navigator.userAgent.slice(-90)
+    ].join("\n");
+  };
+  setInterval(tick, 700);
+}
