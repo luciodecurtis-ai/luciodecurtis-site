@@ -268,13 +268,15 @@ function initHomePick() {
   if (reduced) { gsap.set(list, { autoAlpha: 0 }); return; }
 
   // 1) while the section rises: the slides recede (tilt + scale + fade), the grid glow fades in
-  // (the fixed slides are left untouched until this starts: iOS Safari can stop painting a transformed fixed layer)
+  // phones: the fixed slides are never touched (iOS / Instagram's browser can stop painting them);
+  // the section simply rises over them on its solid background
   const touch = window.matchMedia("(hover: none)").matches;
-  gsap.timeline({ scrollTrigger: { trigger: sec, start: "top bottom", end: "top top", scrub: true,
-      onLeaveBack: () => gsap.set(list, { clearProps: "transform,opacity,visibility" }) } })
-    .fromTo(list, { scale: 1, rotationX: 0, yPercent: 0, autoAlpha: 1, transformOrigin: "50% 100%", transformPerspective: touch ? 0 : 1400 },
-      { scale: touch ? .88 : .78, rotationX: touch ? 0 : 14, yPercent: -10, autoAlpha: 0, ease: "power1.in", immediateRender: false }, 0)
-    .fromTo(sec.querySelector(".hpick-bg"), { opacity: 0 }, { opacity: 1, ease: "none" }, 0)
+  const rise = gsap.timeline({ scrollTrigger: { trigger: sec, start: "top bottom", end: "top top", scrub: true,
+      onLeaveBack: () => !touch && gsap.set(list, { clearProps: "transform,opacity,visibility" }) } });
+  if (!touch) rise.fromTo(list, { scale: 1, rotationX: 0, yPercent: 0, autoAlpha: 1, transformOrigin: "50% 100%", transformPerspective: 1400 },
+      { scale: .78, rotationX: 14, yPercent: -10, autoAlpha: 0, ease: "power1.in", immediateRender: false }, 0);
+  rise
+    .fromTo(sec.querySelector(".hpick-bg"), { opacity: touch ? 1 : 0 }, { opacity: 1, ease: "none" }, 0)
     .fromTo(q(".hpick-kick"), { opacity: 0, y: 20 }, { opacity: 1, y: 0, ease: "power2.out", duration: .4 }, .55)
     .fromTo(q(".hpick-title .hl > *"), { yPercent: 110, rotationX: -70 }, { yPercent: 0, rotationX: 0, stagger: .12, ease: "power3.out", duration: .45 }, .5);
 
@@ -798,6 +800,8 @@ function fitDualTitle() {
 /* ---------- boot ---------- */
 // mobile: the address bar showing/hiding must not recalculate every scroll animation
 ScrollTrigger.config({ ignoreMobileResize: true });
+// in-app browsers (Instagram) open small and then grow: recompute when the height really changes, not for the address bar
+{ let lastH = window.innerHeight; window.addEventListener("resize", () => { if (Math.abs(window.innerHeight - lastH) > 160) { lastH = window.innerHeight; ScrollTrigger.refresh(); } }); }
 // recompute trigger positions once late images/fonts have changed the layout
 (() => {
   let t;
